@@ -1,7 +1,7 @@
 import { generateGraph, generateDisplayPathsFromGraph } from "./graph.js"
 
 /**
- * @typedef {import('../types/index.ts').Path} Path
+ * @typedef {import('@xvisionas/graph-resolver').Path} Path
  */
 
 /**

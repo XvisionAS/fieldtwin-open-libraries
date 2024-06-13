@@ -1,7 +1,7 @@
 /**
- * @typedef {import('../types/index.ts').Path} Path
- * @typedef {import('../types/index.ts').PathItemType} PathItemType
- * @typedef {import('../types/index.ts').IPathItem} IPathItem
+ * @typedef {import('@xvisionas/graph-resolver').Path} Path
+ * @typedef {import('@xvisionas/graph-resolver').PathItemType} PathItemType
+ * @typedef {import('@xvisionas/graph-resolver').IPathItem} IPathItem
  */
 
 /**

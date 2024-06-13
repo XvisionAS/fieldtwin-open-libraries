@@ -61,9 +61,9 @@ const subProject = await response.json()
 const startPoint = '-MZCqjqwbDZQ9XTD5I5P'
 const endPoint = '-MWymjRPAoVVdClV08ba'
 
-// Category is optional. If provided it needs to be a valid value in subProject.connectionTypes[].category
-// for example 2 is Oil Production
-const connectionCategory = 2
+// Category is optional
+// If provided it needs to be a valid value in one of subProject.connectionTypes[].category
+const connectionCategory = 264
 
 const paths = findPaths(subProject, startPoint, endPoint, connectionCategory)
 console.log(`Found ${paths.length} path(s)`)

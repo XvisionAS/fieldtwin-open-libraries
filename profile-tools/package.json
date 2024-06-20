@@ -1,0 +1,36 @@
+{
+  "name": "@xvisionas/profile-tools",
+  "version": "1.0.0",
+  "description": "FieldTwin connection profile and metadata export tools",
+  "main": "src/index.js",
+  "type": "module",
+  "types": "types/index.d.ts",
+  "scripts": {
+    "test": "node --test test/test.*.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/XvisionAS/fieldtwin-open-libraries.git"
+  },
+  "files": [
+    "CHANGELOG.md",
+    "README.md",
+    "src",
+    "types"
+  ],
+  "keywords": [
+    "futureon",
+    "fieldtwin",
+    "profile",
+    "metadata"
+  ],
+  "author": "FutureOn",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/XvisionAS/fieldtwin-open-libraries/issues"
+  },
+  "homepage": "https://github.com/XvisionAS/fieldtwin-open-libraries#readme"
+}

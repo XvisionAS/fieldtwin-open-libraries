@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+      "checkJs": true,
+      "module": "NodeNext",
+      "target": "ESNext",
+      "strict": true,
+      "moduleResolution": "NodeNext",
+      "noImplicitAny": false
+    },
+    "include": ["src/**/*.js", "test/**/*.js", "types/**/*.ts"]
+}

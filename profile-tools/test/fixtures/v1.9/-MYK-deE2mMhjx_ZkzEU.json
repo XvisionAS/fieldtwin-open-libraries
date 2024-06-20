@@ -1,0 +1,185 @@
+{
+    "name": "NC2P1",
+    "canBeDrag": false,
+    "radius": 4,
+    "radiusViewDependant": true,
+    "x": 392026,
+    "y": 5308587,
+    "visible": true,
+    "color": "#ff0000",
+    "fontSize": 11,
+    "labelVisible": true,
+    "labelOffsetX": -53.68470453971531,
+    "labelOffsetY": 13.901965884491801,
+    "labelRotation": 0,
+    "rkb": 0,
+    "referenceLevel": "seabed",
+    "tags": [],
+    "isInactive": false,
+    "created": "2020-06-26T11:30:17.379Z",
+    "creator": "jane@example.com",
+    "clonedFroms": [
+        "-MAkO6tYl2-UgT9Jxp0d",
+        "-MAl1NAqwOS8l1FdPe4D",
+        "-MAlB_pfdfqsrKaoKUWw",
+        "-MVL0S30aztX8015rsLb"
+    ],
+    "subProject": "-MYK-de6thIV5gW4fCB-",
+    "kind": {
+        "id": "-M8yzWuvrVmYrlnqI3GN",
+        "name": "Well definition",
+        "account": "-M19tLFJm0U4YUNeNm-c"
+    },
+    "wellBores": [
+        {
+            "name": "Well Bore #0",
+            "path": [
+                {
+                    "x": 392026,
+                    "y": 5308587,
+                    "z": 0
+                },
+                {
+                    "x": 392026,
+                    "y": 5308597,
+                    "z": -30
+                },
+                {
+                    "x": 392026,
+                    "y": 5308607,
+                    "z": -60
+                }
+            ],
+            "casingShoes": [],
+            "targets": [
+                {},
+                {}
+            ],
+            "visible": true,
+            "id": "-McU0wFRRA0Dc-UP4o56",
+            "metaData": []
+        }
+    ],
+    "z": -1172.0604193047475,
+    "metaData": [
+        {
+            "id": "-M8yzZbGumQ9n6bMfeGz",
+            "metaDatumId": "-M8yzZbGumQ9n6bMfeGz",
+            "metaDatumLinkId": "-M8yzZbGumQ9n6bMfeGz",
+            "name": "Well Type",
+            "vendorId": "Acme.WellType",
+            "type": "choices",
+            "value": {
+                "name": "OilProducerNoLift",
+                "id": "-M8yzbg9w8yQL2b7Gfge",
+                "vendorId": "OilProducerNoLift"
+            },
+            "cost": 0,
+            "costPerLength": false,
+            "vendorAttributes": {}
+        },
+        {
+            "id": "-McU0UYtVmIdfKIXxnCU",
+            "metaDatumId": "-M19xgnbsM5ID9WexfDN",
+            "metaDatumLinkId": "-McU0UYtVmIdfKIXxnCU",
+            "name": "Roughness",
+            "vendorId": "Acme.Roughness",
+            "type": "numerical",
+            "cost": 0,
+            "costPerLength": false,
+            "unit": {
+                "unitCategory": "Length",
+                "unitType": "Short Length"
+            },
+            "vendorAttributes": {},
+            "option": "cm",
+            "value": 0.002
+        },
+        {
+            "id": "-McU0d6vZAYSUmZS2gBj",
+            "metaDatumId": "-M19xXO5UH3nXaY44ykr",
+            "metaDatumLinkId": "-McU0d6vZAYSUmZS2gBj",
+            "name": "Inside Diameter",
+            "vendorId": "Acme.InsideDiameter",
+            "type": "numerical",
+            "cost": 0,
+            "costPerLength": false,
+            "unit": {
+                "unitCategory": "Length",
+                "unitType": "Short Length"
+            },
+            "vendorAttributes": {},
+            "option": "cm",
+            "value": 30
+        },
+        {
+            "id": "-MuKzvK-zQK8sdRgROUP",
+            "metaDatumId": "-MuKzFyd8piF3G8nCqjV",
+            "metaDatumLinkId": "-MuKzvK-zQK8sdRgROUP",
+            "definitionId": "AcmePOC:Acme.WallThickness[numerical.Length.Short Length]",
+            "name": "Wall Thickness",
+            "vendorId": "Acme.WallThickness",
+            "type": "numerical",
+            "value": 4.3,
+            "cost": 0,
+            "costPerLength": false,
+            "unit": {
+                "unitReadOnly": true,
+                "unitCategory": "Length",
+                "unitDefaultSymbol": "cm",
+                "unitType": "Short Length"
+            },
+            "vendorAttributes": {},
+            "option": "cm"
+        },
+        {
+            "id": "-MuKzvomT-xYpJkVl6hL",
+            "metaDatumId": "-MuKzeFFKRRmmhY1Hig3",
+            "metaDatumLinkId": "-MuKzvomT-xYpJkVl6hL",
+            "definitionId": "AcmePOC:UValue[numerical.General.U Value]",
+            "name": "U-Value",
+            "vendorId": "Acme.UValue",
+            "type": "numerical",
+            "value": 3.2,
+            "cost": 0,
+            "costPerLength": false,
+            "unit": {
+                "unitCategory": "General",
+                "unitDefaultSymbol": "W/m2/C",
+                "unitType": "U Value",
+                "unitReadOnly": true
+            },
+            "vendorAttributes": {},
+            "option": "W/m2/C"
+        }
+    ],
+    "fromWaterLevel": false,
+    "activeWellBore": {
+        "name": "Well Bore #0",
+        "path": [
+            {
+                "x": 392026,
+                "y": 5308587,
+                "z": 0
+            },
+            {
+                "x": 392026,
+                "y": 5308597,
+                "z": -30
+            },
+            {
+                "x": 392026,
+                "y": 5308607,
+                "z": -60
+            }
+        ],
+        "casingShoes": [],
+        "targets": [
+            {},
+            {}
+        ],
+        "visible": true,
+        "id": "-McU0wFRRA0Dc-UP4o56",
+        "metaData": []
+    }
+}

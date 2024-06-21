@@ -12,10 +12,10 @@ declare module "@xvisionas/profile-tools" {
   export type ProfileType = 'default' | 'sampled';
 
   export interface ProfileOptions {
-    profileType: ProfileType;
-    samplewidth: number;
-    minimumPoints: number;
-    relativePoints: boolean;
+    profileType?: ProfileType;
+    samplewidth?: number;
+    minimumPoints?: number;
+    relativePoints?: boolean;
     simplify?: boolean;
     simplifyTolerance?: number;
   }

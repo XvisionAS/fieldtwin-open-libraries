@@ -1,0 +1,832 @@
+{
+    "visible": true,
+    "costObject": {
+        "value": 0,
+        "entries": [],
+        "costPerDay": 0,
+        "currency": "USD"
+    },
+    "isValidForCost": true,
+    "designType": "Imported",
+    "noHeightSampling": true,
+    "fromSocket": "b",
+    "toSocket": "c",
+    "fromCoordinate": {
+        "x": 392064.3997985052,
+        "y": 5308603.5245736595,
+        "z": -1171.5171909949313
+    },
+    "toCoordinate": {
+        "x": 392287.9107667576,
+        "y": 5310264.114565239,
+        "z": -1171.1481737488207
+    },
+    "importParams": {},
+    "intermediaryPoints": [
+        {
+            "x": 392068.35864961747,
+            "y": 5308605.84518297,
+            "z": -1172.0274469678177
+        },
+        {
+            "x": 392080.9429107201,
+            "y": 5308613.22185682,
+            "z": -1172.0167772422778
+        },
+        {
+            "x": 392080.9429107201,
+            "y": 5308613.22185682,
+            "z": -1172.0167772422778
+        },
+        {
+            "x": 392088.04914802103,
+            "y": 5308618.267907391,
+            "z": -1172.0104796873566
+        },
+        {
+            "x": 392094.1711881237,
+            "y": 5308624.471282273,
+            "z": -1172.0044824124218
+        },
+        {
+            "x": 392099.1230159375,
+            "y": 5308631.643495058,
+            "z": -1171.9989676416374
+        },
+        {
+            "x": 392102.7541726801,
+            "y": 5308639.566621692,
+            "z": -1171.9941029385222
+        },
+        {
+            "x": 392104.9543274912,
+            "y": 5308647.999921979,
+            "z": -1171.9900361146201
+        },
+        {
+            "x": 392105.60378792277,
+            "y": 5308654.035546827,
+            "z": -1171.9877430007123
+        },
+        {
+            "x": 392176.1163744683,
+            "y": 5310170.974068986,
+            "z": -1171.3828465941788
+        },
+        {
+            "x": 392177.2783207869,
+            "y": 5310179.611841598,
+            "z": -1171.3735135632444
+        },
+        {
+            "x": 392179.9225480031,
+            "y": 5310187.916617174,
+            "z": -1171.368887583731
+        },
+        {
+            "x": 392183.96871261107,
+            "y": 5310195.636059311,
+            "z": -1171.3673320675116
+        },
+        {
+            "x": 392189.29387394665,
+            "y": 5310202.535616665,
+            "z": -1171.3674416169094
+        },
+        {
+            "x": 392195.7362296773,
+            "y": 5310208.405649679,
+            "z": -1171.3692129033202
+        },
+        {
+            "x": 392200.3219488967,
+            "y": 5310211.517619671,
+            "z": -1171.3711792080367
+        },
+        {
+            "x": 392284.77379135584,
+            "y": 5310262.230816509,
+            "z": -1171.4096167991916
+        }
+    ],
+    "params": {
+        "type": 2,
+        "label": "Oil Production #8",
+        "width": 1,
+        "showFlow": true
+    },
+    "renderOrder": 0,
+    "showLabel": false,
+    "showLength": false,
+    "showCustomResults": false,
+    "customResults": {},
+    "tags": [],
+    "straight": false,
+    "bendable": true,
+    "isLocked": false,
+    "isInactive": false,
+    "clonedFroms": [
+        "-M19w-ui-7JNHkSCxgqf",
+        "-MA6kwdxlTfY2hMuQJmT",
+        "-MAVO1oJc9NGGD432OPK",
+        "-MAl1NAsJeBp7A46a_Pb",
+        "-MAlB_phpvsM2kClbo9F",
+        "-MVL0S32AiaVnGjSIH_C"
+    ],
+    "subProject": "-MYK-de6thIV5gW4fCB-",
+    "from": {
+        "name": "PLET single #21",
+        "visible": true,
+        "textColor": "#FFF",
+        "costObject": {
+            "entries": [],
+            "value": 0,
+            "currency": "USD"
+        },
+        "isValidForCost": true,
+        "hiddenLabel": true,
+        "isLocked": false,
+        "showMetaInfo": false,
+        "initialState": {
+            "x": 392061.29309006117,
+            "y": 5308601.730398532,
+            "scale": 1,
+            "width": 2.5227,
+            "height": 2.5227,
+            "rotation": 240,
+            "opacity": 1,
+            "label-offset-x": 17.871700778603554,
+            "label-offset-y": 3.48505,
+            "z": -1172.03322892712
+        },
+        "renderOrder": 0,
+        "perAssetParams": {},
+        "perAssetSockets2d": [
+            {
+                "name": "b",
+                "x": 0.000447,
+                "y": 3.587576,
+                "z": 0.5135,
+                "types": [
+                    2
+                ],
+                "type": {
+                    "id": 2,
+                    "name": "Oil Production",
+                    "symbol": "O",
+                    "color": "rgb(0, 255, 65)",
+                    "category": 2,
+                    "params": {
+                        "width": 0.5
+                    },
+                    "_treeElementId": "#ember25174"
+                },
+                "label": "A"
+            },
+            {
+                "name": "a",
+                "x": -0.05268593360539342,
+                "y": -3.290597738932199,
+                "z": 0.513496,
+                "types": [
+                    2
+                ],
+                "type": {
+                    "id": 2,
+                    "name": "Oil Production",
+                    "symbol": "O",
+                    "color": "rgb(0, 255, 65)",
+                    "category": 2,
+                    "params": {
+                        "width": 0.5
+                    },
+                    "_treeElementId": "#ember10371"
+                },
+                "orientation": "vertical",
+                "label": "A"
+            }
+        ],
+        "havePerAssetSockets": true,
+        "wellmasterConfiguration": {},
+        "showCustomResults": false,
+        "customResults": {},
+        "tags": [],
+        "isInactive": false,
+        "created": "2020-06-18T16:26:33.581Z",
+        "creator": "jane@example.com",
+        "clonedFroms": [
+            "-M19w-ui-7JNHkSCxgq7",
+            "-MA7FCnR-wj4twwt16z_",
+            "-MAVO1oINCpO4R3uOmDH",
+            "-MAl1NArI5AYirJ8dMd7",
+            "-MAlB_pgMR1XH7DTR6yJ",
+            "-MVL0S31u45M3Se5_q-c"
+        ],
+        "subProject": "-MYK-de6thIV5gW4fCB-",
+        "asset": {
+            "category": "Pipeline and Pipeline Assets",
+            "description": "",
+            "id": "-K5uq-UNzfoeiOrhxXaQ",
+            "imageUrl": "https://futureonacmeqamaster.blob.core.windows.net/futureon-acme-qa-master-bucket/assets/custom-library/generic/2D/b56e59a736ea--K5uq-UNzfoeiOrhxXaQ.svg?st=2021-05-05T05%3A38%3A38Z&se=2021-05-05T13%3A38%3A38Z&sp=r&sv=2018-03-28&sr=b&sig=8dC6V7CoMjVdlBV6jNvZyc0UxGcB1LeeTkuMDK1%2BNXc%3D",
+            "model3dUrl": "https://futureonacmeqamaster.blob.core.windows.net/futureon-acme-qa-master-bucket/assets/custom-library/generic/3D/b44ecab260ae--K5uq-UNzfoeiOrhxXaQ.json?st=2021-05-05T05%3A38%3A38Z&se=2021-05-05T13%3A38%3A38Z&sp=r&sv=2018-03-28&sr=b&sig=QiZVrAl80%2BqVS207%2FzJt5nBhO%2FnWk7SijhqYlEk%2BrLU%3D",
+            "name": "PLET single",
+            "params": {
+                "height": 7.180854589565051,
+                "left": -1.2661839723587036,
+                "scale": 1,
+                "top": -3.487003086581166,
+                "width": 2.5227878093719482,
+                "minimumSocketSize": 0.25,
+                "isGLTF": true
+            },
+            "shared": true,
+            "sockets2d": [
+                {
+                    "name": "b",
+                    "x": 0.000447,
+                    "y": 3.587576,
+                    "z": 0.5135
+                },
+                {
+                    "name": "a",
+                    "x": 0.000457,
+                    "y": -3.382644,
+                    "z": 0.513496
+                }
+            ],
+            "subType": "piping",
+            "filename2D": "PLET_Single.svg - Thu, 08 Oct 2020 17:16:21 GMT",
+            "filename3D": "PLET_Single_draco.glb - Thu, 08 Oct 2020 17:09:13 GMT",
+            "obsolete": false,
+            "type": "structure"
+        },
+        "connectionsAsFrom": {
+            "-MYK-deHJRkKtnr_pAsw": true
+        },
+        "connectionsAsTo": {
+            "-MYK-deHJRkKtnr_pAtN": true
+        },
+        "metaDataValue": {},
+        "socketMetaDataValue": {},
+        "id": "-MYK-deFGQUv9mfZY4I4"
+    },
+    "to": {
+        "name": "Inline-T #5",
+        "visible": true,
+        "textColor": "#FFF",
+        "costObject": {
+            "entries": [],
+            "value": 0,
+            "currency": "USD"
+        },
+        "isValidForCost": true,
+        "hiddenLabel": true,
+        "isLocked": false,
+        "showMetaInfo": false,
+        "initialState": {
+            "x": 392291.5978788454,
+            "y": 5310266.249637769,
+            "scale": 1,
+            "width": 1.582,
+            "height": 1.582,
+            "rotation": 60,
+            "opacity": 1,
+            "z": -1171.4084762977077
+        },
+        "renderOrder": 0,
+        "perAssetParams": {},
+        "perAssetSockets2d": [
+            {
+                "name": "a",
+                "x": 0.010876,
+                "y": -5.185478,
+                "z": 0.254058,
+                "label": "A",
+                "flow": "Outlet",
+                "types": [
+                    2
+                ],
+                "type": {
+                    "id": 2,
+                    "name": "Oil Production",
+                    "symbol": "O",
+                    "color": "rgb(0, 255, 65)",
+                    "category": 2,
+                    "params": {
+                        "width": 0.5
+                    },
+                    "_treeElementId": "#ember12513"
+                }
+            },
+            {
+                "name": "c",
+                "x": 0.005471,
+                "y": 4.260669,
+                "z": 0.26088,
+                "label": "A",
+                "flow": "Inlet",
+                "types": [
+                    2
+                ],
+                "type": {
+                    "id": 2,
+                    "name": "Oil Production",
+                    "symbol": "O",
+                    "color": "rgb(0, 255, 65)",
+                    "category": 2,
+                    "params": {
+                        "width": 0.5
+                    },
+                    "_treeElementId": "#ember28866"
+                }
+            },
+            {
+                "name": "b",
+                "x": 0.007083,
+                "y": 1.550448,
+                "z": 1.422128,
+                "label": "A",
+                "flow": "Inlet",
+                "types": [
+                    2
+                ],
+                "type": {
+                    "id": 2,
+                    "name": "Oil Production",
+                    "symbol": "O",
+                    "color": "rgb(0, 255, 65)",
+                    "category": 2,
+                    "params": {
+                        "width": 0.5
+                    },
+                    "_treeElementId": "#ember28866"
+                }
+            }
+        ],
+        "havePerAssetSockets": true,
+        "wellmasterConfiguration": {},
+        "showCustomResults": false,
+        "customResults": {},
+        "tags": [],
+        "isInactive": false,
+        "created": "2020-06-26T14:50:55.245Z",
+        "creator": "jane@example.com",
+        "clonedFroms": [
+            "-MA7PSFELn4etklue0kl",
+            "-MAl61oqkK9Z1qTWdjB7",
+            "-MAlB_pgMR1XH7DTR6yS",
+            "-MVL0S31u45M3Se5_q-l"
+        ],
+        "subProject": "-MYK-de6thIV5gW4fCB-",
+        "asset": {
+            "category": "Valve",
+            "description": "",
+            "id": "-K5uq-UM-_005a2a7l8i",
+            "imageUrl": "https://futureonacmeqamaster.blob.core.windows.net/futureon-acme-qa-master-bucket/assets/custom-library/generic/2D/5a751d5814e1--K5uq-UM-_005a2a7l8i.svg?st=2021-05-05T05%3A38%3A38Z&se=2021-05-05T13%3A38%3A38Z&sp=r&sv=2018-03-28&sr=b&sig=ei5ZTaSoWBeKKbp7Ev9MJdZewmV3Ls34OgoTe%2BfuwdE%3D",
+            "model3dUrl": "https://futureonacmeqamaster.blob.core.windows.net/futureon-acme-qa-master-bucket/assets/custom-library/generic/3D/cb9addc8771e--K5uq-UM-_005a2a7l8i.json?st=2021-05-05T05%3A38%3A38Z&se=2021-05-05T13%3A38%3A38Z&sp=r&sv=2018-03-28&sr=b&sig=9RnIOLq6vJDpSxuTzpuDItQA%2FMfb1MH25qZfTtI1zj4%3D",
+            "name": "Inline-T",
+            "params": {
+                "height": 9.318247807086236,
+                "left": -0.8835904464758089,
+                "scale": 1,
+                "top": -5.027855373417855,
+                "width": 1.5820387770196231,
+                "isGLTF": true,
+                "minimumSocketSize": 0.25
+            },
+            "shared": true,
+            "sockets2d": [
+                {
+                    "name": "a",
+                    "x": 0.010876,
+                    "y": -5.185478,
+                    "z": 0.254058
+                },
+                {
+                    "name": "c",
+                    "x": 0.005471,
+                    "y": 4.260669,
+                    "z": 0.26088
+                },
+                {
+                    "name": "b",
+                    "x": 0.007083,
+                    "y": 1.550448,
+                    "z": 1.422128
+                }
+            ],
+            "subType": "piping",
+            "filename3D": "Inline-T_draco.glb - Thu, 08 Oct 2020 09:27:17 GMT",
+            "filenameSockets": "Inline-T.sockets - Wed, 14 Oct 2020 18:28:45 GMT",
+            "type": "structure"
+        },
+        "metaDataValue": {},
+        "socketMetaDataValue": {},
+        "id": "-MYK-deFGQUv9mfZY4ID"
+    },
+    "connectionType": {
+        "id": 2,
+        "name": "Oil Production",
+        "symbol": "O",
+        "color": "rgb(0, 255, 65)",
+        "category": 2,
+        "params": {
+            "width": 0.5
+        },
+        "_treeElementId": "#ember7860"
+    },
+    "definition": {
+        "id": 2,
+        "name": "Oil Production",
+        "symbol": "O",
+        "color": "rgb(0, 255, 65)",
+        "category": {
+            "id": 2,
+            "name": "Production"
+        },
+        "params": {
+            "width": 0.5
+        },
+        "_treeElementId": "#ember7860"
+    },
+    "designName": "None",
+    "renderAs": "Standard",
+    "bendParams": [
+        {
+            "bendParams": {
+                "radius": 50,
+                "x": 16.543112204177305,
+                "y": 9.697283174842596,
+                "normal": {
+                    "x": -0.5057038472328662,
+                    "y": 0.8627071454983306
+                },
+                "t0": {
+                    "x": 25.285192361643293,
+                    "y": -43.135357274916544
+                },
+                "t1": {
+                    "x": 49.946069524859794,
+                    "y": -2.321667292673773
+                },
+                "bendLength": 49.70743250035072,
+                "segmentLength": 19.17581956437842
+            },
+            "x": 392080.9429107201,
+            "y": 5308613.22185682
+        },
+        {
+            "bendParams": {
+                "radius": 50,
+                "normal": {
+                    "x": 0.9989213904971961,
+                    "y": -0.04643334585347537
+                },
+                "x": 111.7165759523632,
+                "y": 1567.4494953406975,
+                "t0": {
+                    "x": -49.94606952485981,
+                    "y": 2.3216672926737374
+                },
+                "t1": {
+                    "x": -25.740495099647006,
+                    "y": 42.86521797477576
+                },
+                "bendLength": 49.17801919917176,
+                "segmentLength": 1518.576593673547
+            },
+            "x": 392176.1163744683,
+            "y": 5310170.974068986
+        }
+    ],
+    "length": 1739.1384221416529,
+    "sampledLength": 1738.8412835993086,
+    "sampled": [
+        {
+            "x": 392064.3997985052,
+            "y": 5308603.5245736595,
+            "z": -1171.5171909949313
+        },
+        {
+            "x": 392068.64167471067,
+            "y": 5308606.011087332,
+            "z": -1172.0272089891384
+        },
+        {
+            "x": 392080.77224550105,
+            "y": 5308613.121815852,
+            "z": -1172.0169219705285
+        },
+        {
+            "x": 392085.49142661423,
+            "y": 5308616.314205716,
+            "z": -1172.0127887069261
+        },
+        {
+            "x": 392087.88381103694,
+            "y": 5308618.128788915,
+            "z": -1172.0106328997617
+        },
+        {
+            "x": 392090.11614146794,
+            "y": 5308620.1282867715,
+            "z": -1172.0085269402077
+        },
+        {
+            "x": 392092.90169923974,
+            "y": 5308622.998051786,
+            "z": -1172.0057836083965
+        },
+        {
+            "x": 392094.83538260974,
+            "y": 5308625.291301456,
+            "z": -1172.0037864612227
+        },
+        {
+            "x": 392097.19228840875,
+            "y": 5308628.52240847,
+            "z": -1172.0012178834395
+        },
+        {
+            "x": 392099.28489359195,
+            "y": 5308631.930440296,
+            "z": -1171.9987711906747
+        },
+        {
+            "x": 392101.0966583719,
+            "y": 5308635.49590344,
+            "z": -1171.9964634280122
+        },
+        {
+            "x": 392102.6196143315,
+            "y": 5308639.193967049,
+            "z": -1171.994307564394
+        },
+        {
+            "x": 392103.8230505743,
+            "y": 5308643.007899191,
+            "z": -1171.9923292520225
+        },
+        {
+            "x": 392104.742660897,
+            "y": 5308646.902695126,
+            "z": -1171.9905154537855
+        },
+        {
+            "x": 392105.2564105824,
+            "y": 5308649.855281938,
+            "z": -1171.9892628394996
+        },
+        {
+            "x": 392105.6541424189,
+            "y": 5308654.712089615,
+            "z": -1171.9875009417337
+        },
+        {
+            "x": 392106.8072112673,
+            "y": 5308674.791869719,
+            "z": -1171.9805445244456
+        },
+        {
+            "x": 392108.85717433144,
+            "y": 5308715.989913419,
+            "z": -1171.966482693981
+        },
+        {
+            "x": 392115.6571176848,
+            "y": 5308862.164684974,
+            "z": -1171.9576593331933
+        },
+        {
+            "x": 392143.40075651376,
+            "y": 5309480.066526901,
+            "z": -1172.0048869460709
+        },
+        {
+            "x": 392163.803600924,
+            "y": 5309928.748982383,
+            "z": -1171.6527667254343
+        },
+        {
+            "x": 392168.91518907074,
+            "y": 5310036.617447391,
+            "z": -1171.5401918209577
+        },
+        {
+            "x": 392172.75056491425,
+            "y": 5310113.6705960315,
+            "z": -1171.4491783735873
+        },
+        {
+            "x": 392175.2205574758,
+            "y": 5310158.283585791,
+            "z": -1171.3972706587858
+        },
+        {
+            "x": 392175.90363317373,
+            "y": 5310168.392922408,
+            "z": -1171.3857535321426
+        },
+        {
+            "x": 392176.6477026099,
+            "y": 5310176.295859313,
+            "z": -1171.3769344568016
+        },
+        {
+            "x": 392177.6587155848,
+            "y": 5310181.183937327,
+            "z": -1171.3719631969238
+        },
+        {
+            "x": 392179.152047452,
+            "y": 5310185.954318217,
+            "z": -1171.3695094977186
+        },
+        {
+            "x": 392180.6847391081,
+            "y": 5310189.647966614,
+            "z": -1171.3684111683597
+        },
+        {
+            "x": 392183.0078441421,
+            "y": 5310194.07391792,
+            "z": -1171.3675221479762
+        },
+        {
+            "x": 392185.7614213922,
+            "y": 5310198.245217946,
+            "z": -1171.367179449021
+        },
+        {
+            "x": 392188.91694741976,
+            "y": 5310202.121877274,
+            "z": -1171.3673844912655
+        },
+        {
+            "x": 392191.7257822984,
+            "y": 5310204.9683287265,
+            "z": -1171.3679667921094
+        },
+        {
+            "x": 392195.52800648543,
+            "y": 5310208.240761781,
+            "z": -1171.3691392217106
+        },
+        {
+            "x": 392197.1088566869,
+            "y": 5310209.438608629,
+            "z": -1171.369734343426
+        },
+        {
+            "x": 392201.24428282725,
+            "y": 5310212.101241254,
+            "z": -1171.3716026757656
+        },
+        {
+            "x": 392213.9979728609,
+            "y": 5310219.893396344,
+            "z": -1171.377642114625
+        },
+        {
+            "x": 392284.77735387784,
+            "y": 5310262.232955797,
+            "z": -1171.409469224805
+        },
+        {
+            "x": 392287.9107667577,
+            "y": 5310264.11456524,
+            "z": -1171.1481737488207
+        }
+    ],
+    "metaData": [
+        {
+            "id": "-M19wn-KQoW7WZhT91rx",
+            "metaDatumId": "-M19wn-KQoW7WZhT91rx",
+            "metaDatumLinkId": "-M19wn-KQoW7WZhT91rx",
+            "name": "Network Type",
+            "vendorId": "Acme.NetworkType",
+            "type": "choices",
+            "value": {
+                "name": "Production network",
+                "id": "-M19wpxNxIb-1OHHDv5o",
+                "vendorId": "ProductionNetwork"
+            },
+            "cost": 0,
+            "costPerLength": false,
+            "vendorAttributes": {}
+        },
+        {
+            "id": "-M19x1RPx7i-MNt08thW",
+            "metaDatumId": "-M19x1RPx7i-MNt08thW",
+            "metaDatumLinkId": "-M19x1RPx7i-MNt08thW",
+            "name": "Mask",
+            "vendorId": "Acme.Mask",
+            "type": "choices",
+            "value": {
+                "name": "Included in system",
+                "id": "-M19x4SovPrkAAXFgv96",
+                "vendorId": "IncludedInSystem"
+            },
+            "cost": 0,
+            "costPerLength": false,
+            "vendorAttributes": {}
+        },
+        {
+            "id": "-M19xA_DqngWygA6CXI8",
+            "metaDatumId": "-M19xA_DqngWygA6CXI8",
+            "metaDatumLinkId": "-M19xA_DqngWygA6CXI8",
+            "name": "Overall Heat Transfer Coefficient",
+            "vendorId": "Acme.OverallHeatTransferCoefficient",
+            "type": "numerical",
+            "value": 45.431864,
+            "cost": 0,
+            "costPerLength": false,
+            "vendorAttributes": {},
+            "option": "W/m2/K"
+        },
+        {
+            "id": "-M19xXO5UH3nXaY44ykr",
+            "metaDatumId": "-M19xXO5UH3nXaY44ykr",
+            "metaDatumLinkId": "-M19xXO5UH3nXaY44ykr",
+            "name": "Inside Diameter",
+            "vendorId": "Acme.InsideDiameter",
+            "type": "numerical",
+            "value": 28.7,
+            "cost": 0,
+            "costPerLength": false,
+            "vendorAttributes": {},
+            "option": "cm"
+        },
+        {
+            "id": "-M19xgnbsM5ID9WexfDN",
+            "metaDatumId": "-M19xgnbsM5ID9WexfDN",
+            "metaDatumLinkId": "-M19xgnbsM5ID9WexfDN",
+            "name": "Roughness",
+            "vendorId": "Acme.Roughness",
+            "type": "numerical",
+            "value": 0.003,
+            "cost": 0,
+            "costPerLength": false,
+            "vendorAttributes": {},
+            "option": "cm"
+        },
+        {
+            "id": "-M19xoye7hUdE24R1piT",
+            "metaDatumId": "-M19xoye7hUdE24R1piT",
+            "metaDatumLinkId": "-M19xoye7hUdE24R1piT",
+            "name": "Segment Type",
+            "vendorId": "Acme.SegmentType",
+            "type": "choices",
+            "value": {
+                "name": "Coated",
+                "id": "-M19xvKDjkvgnezvn3p6",
+                "vendorId": "Coated"
+            },
+            "cost": 0,
+            "costPerLength": false,
+            "vendorAttributes": {}
+        },
+        {
+            "id": "-MuLAWSXKX7yL15Ku_Dp",
+            "metaDatumId": "-MuKzFyd8piF3G8nCqjV",
+            "metaDatumLinkId": "-MuLAWSXKX7yL15Ku_Dp",
+            "definitionId": "AcmePOC:Acme.WallThickness[numerical.Length.Short Length]",
+            "name": "Wall Thickness",
+            "vendorId": "Acme.WallThickness",
+            "type": "numerical",
+            "value": 2.5,
+            "cost": 0,
+            "costPerLength": false,
+            "unit": {
+                "unitReadOnly": true,
+                "unitCategory": "Length",
+                "unitDefaultSymbol": "cm",
+                "unitType": "Short Length"
+            },
+            "vendorAttributes": {},
+            "option": "cm"
+        },
+        {
+            "id": "-MuLAZ-9bRa7i7Zr10fB",
+            "metaDatumId": "-MuKzeFFKRRmmhY1Hig3",
+            "metaDatumLinkId": "-MuLAZ-9bRa7i7Zr10fB",
+            "definitionId": "AcmePOC:UValue[numerical.General.U Value]",
+            "name": "U-Value",
+            "vendorId": "Acme.UValue",
+            "type": "numerical",
+            "value": 2.2,
+            "cost": 0,
+            "costPerLength": false,
+            "unit": {
+                "unitCategory": "General",
+                "unitDefaultSymbol": "W/m2/C",
+                "unitType": "U Value",
+                "unitReadOnly": true
+            },
+            "vendorAttributes": {},
+            "option": "W/m2/C"
+        }
+    ],
+    "fromSocketLabel": "A",
+    "toSocketLabel": "A"
+}

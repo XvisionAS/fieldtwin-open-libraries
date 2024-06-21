@@ -1,0 +1,859 @@
+{
+    "visible": true,
+    "costObject": {
+        "value": 0,
+        "entries": [],
+        "costPerDay": 0,
+        "currency": "USD"
+    },
+    "isValidForCost": true,
+    "designType": "Riser - Lazy Wave",
+    "fromSocket": "d",
+    "toSocket": "002",
+    "fromCoordinate": {
+        "x": 397171.78805986495,
+        "y": 5313278.3756107045,
+        "z": -1169.9266775615602
+    },
+    "toCoordinate": {
+        "x": 397226.00271305087,
+        "y": 5313928.237738729,
+        "z": 6.575306
+    },
+    "importParams": {},
+    "intermediaryPoints": [
+        {
+            "x": 397171.80840442656,
+            "y": 5313278.619477617,
+            "z": -1171.0304691059123
+        },
+        {
+            "x": 397185.3417231614,
+            "y": 5313440.84114271,
+            "z": -5000
+        },
+        {
+            "x": 397198.8953864579,
+            "y": 5313603.306674717,
+            "z": -3000
+        },
+        {
+            "x": 397212.4490497544,
+            "y": 5313765.772206724,
+            "z": -4000
+        }
+    ],
+    "params": {
+        "type": 2,
+        "label": "Oil Production #12b",
+        "Riser - Lazy Wave": {
+            "a": {
+                "delta": 0.75,
+                "heightDelta": 0.8,
+                "depth": -4000
+            },
+            "b": {
+                "delta": 0.5,
+                "heightDelta": 0.6,
+                "depth": -3000
+            },
+            "c": {
+                "delta": 0.25,
+                "heightDelta": 1,
+                "depth": -5000
+            }
+        },
+        "width": 1,
+        "showFlow": true
+    },
+    "renderOrder": 0,
+    "showLabel": false,
+    "showLength": false,
+    "showCustomResults": false,
+    "customResults": {},
+    "tags": [],
+    "straight": false,
+    "bendable": false,
+    "isLocked": false,
+    "noHeightSampling": false,
+    "isInactive": false,
+    "clonedFroms": [
+        "-M19w-ui-7JNHkSCxgqj",
+        "-MA6kwdxlTfY2hMuQJmX",
+        "-MAVO1oJc9NGGD432OPO",
+        "-MAl1NAsJeBp7A46a_Pf",
+        "-MAlB_phpvsM2kClbo9I",
+        "-MVL0S32AiaVnGjSIH_F"
+    ],
+    "subProject": "-MYK-de6thIV5gW4fCB-",
+    "from": {
+        "name": "Riser Base #1",
+        "visible": true,
+        "textColor": "#FFF",
+        "costObject": {
+            "entries": [],
+            "value": 0,
+            "currency": "USD"
+        },
+        "isValidForCost": true,
+        "hiddenLabel": true,
+        "isLocked": false,
+        "showMetaInfo": false,
+        "initialState": {
+            "x": 397169.70228178287,
+            "y": 5313273.269115061,
+            "scale": 1,
+            "width": 6.8203,
+            "height": 6.8203,
+            "rotation": 185.48995323503084,
+            "opacity": 1,
+            "label-offset-x": 16.06797504425049,
+            "label-offset-y": 4.7542504999999995,
+            "z": -1171.0384017991541
+        },
+        "renderOrder": 0,
+        "perAssetParams": {},
+        "perAssetSockets2d": [
+            {
+                "name": "a",
+                "x": -1.588434,
+                "y": -2.446834,
+                "z": 1.240186,
+                "types": []
+            },
+            {
+                "name": "b",
+                "x": 0.407539,
+                "y": -3.620047,
+                "z": 1.106967,
+                "types": []
+            },
+            {
+                "name": "c",
+                "x": 2.165839,
+                "y": -3.620047,
+                "z": 1.106967,
+                "types": [
+                    2
+                ],
+                "type": {
+                    "id": 2,
+                    "name": "Oil Production",
+                    "symbol": "O",
+                    "color": "rgb(0, 255, 65)",
+                    "category": 2,
+                    "params": {
+                        "width": 0.5
+                    },
+                    "_treeElementId": "#ember29802"
+                },
+                "label": "A"
+            },
+            {
+                "name": "d",
+                "x": -1.587666,
+                "y": 5.282621,
+                "z": 1.104038,
+                "types": [
+                    2
+                ],
+                "type": {
+                    "id": 2,
+                    "name": "Oil Production",
+                    "symbol": "O",
+                    "color": "rgb(0, 255, 65)",
+                    "category": 2,
+                    "params": {
+                        "width": 0.5
+                    },
+                    "_treeElementId": "#ember10371"
+                },
+                "label": "A"
+            }
+        ],
+        "havePerAssetSockets": true,
+        "wellmasterConfiguration": {},
+        "showCustomResults": false,
+        "customResults": {},
+        "tags": [],
+        "isInactive": false,
+        "created": "2020-06-17T14:01:50.886Z",
+        "creator": "jane@example.com",
+        "clonedFroms": [
+            "-M19w-ui-7JNHkSCxgqA",
+            "-MA6kwdwFITtzPFg86ov",
+            "-MAVO1oINCpO4R3uOmC-",
+            "-MAl1NArI5AYirJ8dMcK",
+            "-MAlB_pgMR1XH7DTR6y6",
+            "-MVL0S31u45M3Se5_q-R"
+        ],
+        "subProject": "-MYK-de6thIV5gW4fCB-",
+        "asset": {
+            "category": "Riser & Riser Base",
+            "description": "",
+            "id": "-K5uq-UX2AQFyDPRqeiV",
+            "imageUrl": "https://futureonacmeqamaster.blob.core.windows.net/futureon-acme-qa-master-bucket/assets/custom-library/generic/2D/b33eaa78bdde--K5uq-UX2AQFyDPRqeiV.svg?st=2021-05-05T05%3A38%3A56Z&se=2021-05-05T13%3A38%3A56Z&sp=r&sv=2018-03-28&sr=b&sig=1NSwzBEgGLw9fc4suxc6TdoY%2FoTGwVMD4q6g3eKc8Lk%3D",
+            "model3dUrl": "https://futureonacmeqamaster.blob.core.windows.net/futureon-acme-qa-master-bucket/assets/custom-library/generic/3D/2a6d2aaf23e8--K5uq-UX2AQFyDPRqeiV.json?st=2021-05-05T05%3A38%3A56Z&se=2021-05-05T13%3A38%3A56Z&sp=r&sv=2018-03-28&sr=b&sig=xSsWkFVhNjoAPTLE1L%2Bob4USdWVwfStiSoHwWSv3CkU%3D",
+            "name": "Riser Base",
+            "params": {
+                "height": 9.508581753269077,
+                "left": -3.1256601810455322,
+                "scale": 1,
+                "top": -3.9162444547191444,
+                "width": 6.820351600646973,
+                "minimumSocketSize": 0.35,
+                "isGLTF": true
+            },
+            "shared": true,
+            "sockets2d": [
+                {
+                    "name": "a",
+                    "x": -1.588434,
+                    "y": -2.446834,
+                    "z": 1.240186
+                },
+                {
+                    "name": "b",
+                    "x": 0.407539,
+                    "y": -3.620047,
+                    "z": 1.106967
+                },
+                {
+                    "name": "c",
+                    "x": 2.165839,
+                    "y": -3.620047,
+                    "z": 1.106967
+                },
+                {
+                    "name": "d",
+                    "x": -1.587666,
+                    "y": 5.282621,
+                    "z": 1.104038
+                }
+            ],
+            "subType": "piping",
+            "filename3D": "Riser_Base_draco.glb - Thu, 08 Oct 2020 19:02:32 GMT",
+            "type": "structure"
+        },
+        "connectionsAsFrom": {
+            "-MYK-deHJRkKtnr_pAsz": true
+        },
+        "connectionsAsTo": {
+            "-MYK-deHJRkKtnr_pAt-": true
+        },
+        "metaDataValue": {},
+        "socketMetaDataValue": {},
+        "id": "-MYK-deFGQUv9mfZY4Ht"
+    },
+    "to": {
+        "name": "Generic FPSO (Turret) #1",
+        "visible": true,
+        "textColor": "#FFF",
+        "costObject": {
+            "entries": [],
+            "value": 0,
+            "currency": "USD"
+        },
+        "isValidForCost": true,
+        "hiddenLabel": false,
+        "isLocked": false,
+        "showMetaInfo": false,
+        "initialState": {
+            "x": 397245.1405481419,
+            "y": 5314077.916047083,
+            "scale": 1,
+            "width": 307.5596479032735,
+            "height": 307.5596479032735,
+            "rotation": 97.05797639305524,
+            "opacity": 1,
+            "label-offset-x": 29.44865058362484,
+            "label-offset-y": 23.757571004592045,
+            "z": 0
+        },
+        "renderOrder": 0,
+        "perAssetParams": {},
+        "perAssetSockets2d": [
+            {
+                "name": "009",
+                "x": 150.449646,
+                "y": 2.413348,
+                "z": 5.214542,
+                "types": [
+                    4
+                ],
+                "type": {
+                    "id": 4,
+                    "name": "Water Injection",
+                    "symbol": "WI",
+                    "color": "#00adf3",
+                    "category": 4,
+                    "params": {
+                        "width": 0.5
+                    },
+                    "_treeElementId": "#ember92992"
+                }
+            },
+            {
+                "name": "015",
+                "x": 143.292969,
+                "y": -2.399169,
+                "z": 5.214542,
+                "types": []
+            },
+            {
+                "name": "003",
+                "x": 148.662888,
+                "y": -2.692675,
+                "z": 6.575306,
+                "types": [
+                    1
+                ],
+                "type": {
+                    "id": 1,
+                    "name": "Umbilical",
+                    "symbol": "U",
+                    "color": "#2C2F34",
+                    "category": 1,
+                    "params": {
+                        "width": 0.5
+                    },
+                    "_treeElementId": "#ember92950"
+                }
+            },
+            {
+                "name": "004",
+                "x": 144.936798,
+                "y": -3.447355,
+                "z": 6.575306,
+                "types": []
+            },
+            {
+                "name": "005",
+                "x": 141.817108,
+                "y": -1.253375,
+                "z": 6.575306,
+                "types": []
+            },
+            {
+                "name": "014",
+                "x": 141.352692,
+                "y": 0.625115,
+                "z": 5.214542,
+                "types": []
+            },
+            {
+                "name": "013",
+                "x": 146.865173,
+                "y": -3.1153,
+                "z": 5.214542,
+                "types": [
+                    "-MAkE2x54bX6QMXcrI69"
+                ],
+                "type": {
+                    "id": "-MAkE2x54bX6QMXcrI69",
+                    "name": "LVP (Stabilised Oil for circulation)",
+                    "symbol": "",
+                    "color": "rgb(255, 153, 0)",
+                    "params": {
+                        "width": 0.5
+                    },
+                    "category": 258,
+                    "_treeElementId": "#ember92801"
+                }
+            },
+            {
+                "name": "012",
+                "x": 142.057861,
+                "y": 4.029605,
+                "z": 5.214542,
+                "types": []
+            },
+            {
+                "name": "016",
+                "x": 148.47139,
+                "y": 5.230877,
+                "z": 5.214542,
+                "types": [
+                    16
+                ],
+                "type": {
+                    "id": 16,
+                    "name": "Gas Lift",
+                    "symbol": "GL",
+                    "color": "rgb(255, 0, 0)",
+                    "category": 16,
+                    "params": {
+                        "width": 0.5
+                    },
+                    "_treeElementId": "#ember92744"
+                }
+            },
+            {
+                "name": "010",
+                "x": 149.775909,
+                "y": -1.207214,
+                "z": 5.214542,
+                "types": [
+                    2
+                ],
+                "type": {
+                    "id": 2,
+                    "name": "Oil Production",
+                    "symbol": "O",
+                    "color": "rgb(0, 255, 65)",
+                    "category": 2,
+                    "params": {
+                        "width": 0.5
+                    },
+                    "_treeElementId": "#ember92813"
+                }
+            },
+            {
+                "name": "011",
+                "x": 144.943314,
+                "y": 6.030755,
+                "z": 5.214542,
+                "types": [],
+                "type": {
+                    "name": "Universal",
+                    "id": 0
+                }
+            },
+            {
+                "name": "007",
+                "x": 143.161697,
+                "y": 5.64628,
+                "z": 6.575306,
+                "types": [],
+                "type": {
+                    "name": "Universal",
+                    "id": 0
+                }
+            },
+            {
+                "name": "006",
+                "x": 140.980255,
+                "y": 2.521601,
+                "z": 6.575306,
+                "types": []
+            },
+            {
+                "name": "002",
+                "x": 150.89563,
+                "y": 0.6013,
+                "z": 6.575306,
+                "types": [
+                    2
+                ],
+                "type": {
+                    "id": 2,
+                    "name": "Oil Production",
+                    "symbol": "O",
+                    "color": "rgb(0, 255, 65)",
+                    "category": 2,
+                    "params": {
+                        "width": 0.5
+                    },
+                    "_treeElementId": "#ember92813"
+                }
+            },
+            {
+                "name": "001",
+                "x": 150.061066,
+                "y": 4.349001,
+                "z": 6.575306,
+                "types": [
+                    1
+                ],
+                "type": {
+                    "id": 1,
+                    "name": "Umbilical",
+                    "symbol": "U",
+                    "color": "#2C2F34",
+                    "category": 1,
+                    "params": {
+                        "width": 0.5
+                    },
+                    "_treeElementId": "#ember92950"
+                }
+            },
+            {
+                "name": "008",
+                "x": 146.944077,
+                "y": 6.372405,
+                "z": 6.575306,
+                "types": [
+                    2
+                ],
+                "type": {
+                    "id": 2,
+                    "name": "Oil Production",
+                    "symbol": "O",
+                    "color": "rgb(0, 255, 65)",
+                    "category": 2,
+                    "params": {
+                        "width": 0.5
+                    },
+                    "_treeElementId": "#ember92813"
+                },
+                "orientation": "vertical"
+            }
+        ],
+        "havePerAssetSockets": true,
+        "wellmasterConfiguration": {},
+        "showCustomResults": false,
+        "customResults": {},
+        "tags": [],
+        "isInactive": false,
+        "clonedFroms": [
+            "-M19w-uhUv5RILjG33Va",
+            "-MA6kwdwFITtzPFg86ol",
+            "-MAVO1oHKVjxO76kgoUF",
+            "-MAl1NArI5AYirJ8dMcA",
+            "-MAlB_pgMR1XH7DTR6y4",
+            "-MVL0S31u45M3Se5_q-P"
+        ],
+        "subProject": "-MYK-de6thIV5gW4fCB-",
+        "asset": {
+            "id": "-LTaYLWLOoSrfmp_Mk51",
+            "name": "Generic FPSO (Turret)",
+            "description": "",
+            "params": {
+                "height": 47.51514200918409,
+                "left": -153.7798405410021,
+                "top": -23.757224015648436,
+                "width": 307.5596479032735,
+                "isGLTF": true
+            },
+            "shared": true,
+            "imageUrl": "https://futureonacmeqamaster.blob.core.windows.net/futureon-acme-qa-master-bucket/assets/custom-library/generic/2D/9d28260fb1da--LTaYLWLOoSrfmp_Mk51.svg?st=2021-05-05T05%3A38%3A56Z&se=2021-05-05T13%3A38%3A56Z&sp=r&sv=2018-03-28&sr=b&sig=bPmSOXNefi9qeECLubEcgFWg3cgm%2BNInPN7ig0o%2BKTE%3D",
+            "model3dUrl": "https://futureonacmeqamaster.blob.core.windows.net/futureon-acme-qa-master-bucket/assets/custom-library/generic/3D/18e16bad0bc3--LTaYLWLOoSrfmp_Mk51.json?st=2021-05-05T05%3A38%3A56Z&se=2021-05-05T13%3A38%3A56Z&sp=r&sv=2018-03-28&sr=b&sig=g1hxJLcnzXWfS6ezsghOQBph3PqrhILptpIFtA1X0vI%3D",
+            "sockets2d": [
+                {
+                    "name": "009",
+                    "x": 150.449646,
+                    "y": 2.413348,
+                    "z": 5.214542
+                },
+                {
+                    "name": "015",
+                    "x": 143.292969,
+                    "y": -2.399169,
+                    "z": 5.214542
+                },
+                {
+                    "name": "003",
+                    "x": 148.662888,
+                    "y": -2.692675,
+                    "z": 6.575306
+                },
+                {
+                    "name": "004",
+                    "x": 144.936798,
+                    "y": -3.447355,
+                    "z": 6.575306
+                },
+                {
+                    "name": "005",
+                    "x": 141.817108,
+                    "y": -1.253375,
+                    "z": 6.575306
+                },
+                {
+                    "name": "014",
+                    "x": 141.352692,
+                    "y": 0.625115,
+                    "z": 5.214542
+                },
+                {
+                    "name": "013",
+                    "x": 146.865173,
+                    "y": -3.1153,
+                    "z": 5.214542
+                },
+                {
+                    "name": "012",
+                    "x": 142.057861,
+                    "y": 4.029605,
+                    "z": 5.214542
+                },
+                {
+                    "name": "016",
+                    "x": 148.47139,
+                    "y": 5.230877,
+                    "z": 5.214542
+                },
+                {
+                    "name": "010",
+                    "x": 149.775909,
+                    "y": -1.207214,
+                    "z": 5.214542
+                },
+                {
+                    "name": "011",
+                    "x": 144.943314,
+                    "y": 6.030755,
+                    "z": 5.214542
+                },
+                {
+                    "name": "007",
+                    "x": 143.161697,
+                    "y": 5.64628,
+                    "z": 6.575306
+                },
+                {
+                    "name": "006",
+                    "x": 140.980255,
+                    "y": 2.521601,
+                    "z": 6.575306
+                },
+                {
+                    "name": "002",
+                    "x": 150.89563,
+                    "y": 0.6013,
+                    "z": 6.575306
+                },
+                {
+                    "name": "001",
+                    "x": 150.061066,
+                    "y": 4.349001,
+                    "z": 6.575306
+                },
+                {
+                    "name": "008",
+                    "x": 146.944077,
+                    "y": 6.372405,
+                    "z": 6.575306
+                }
+            ],
+            "category": "Host",
+            "subType": "vessel",
+            "filename3D": "Generic_FPSO_Turret2.glb - Wed, 30 Oct 2019 07:57:05 GMT",
+            "type": "vessel"
+        },
+        "metaDataValue": {
+            "-MYK-deAV5JeBzBcyaTs": true,
+            "-MYK-deAV5JeBzBcyaTt": true,
+            "-MYK-deAV5JeBzBcyaTu": true,
+            "-MYK-deByT1oVJQ1KM6w": true
+        },
+        "socketMetaDataValue": {},
+        "id": "-MYK-deFGQUv9mfZY4Hr"
+    },
+    "connectionType": {
+        "id": 2,
+        "name": "Oil Production",
+        "symbol": "O",
+        "color": "rgb(0, 255, 65)",
+        "category": 2,
+        "params": {
+            "width": 0.5
+        },
+        "_treeElementId": "#ember7860"
+    },
+    "definition": {
+        "id": 2,
+        "name": "Oil Production",
+        "symbol": "O",
+        "color": "rgb(0, 255, 65)",
+        "category": {
+            "id": 2,
+            "name": "Production"
+        },
+        "params": {
+            "width": 0.5
+        },
+        "_treeElementId": "#ember7860"
+    },
+    "designName": "Riser - Lazy Wave",
+    "renderAs": "Riser - Lazy Wave",
+    "length": 10883.023537940504,
+    "sampledLength": 1794.557480279995,
+    "sampled": [
+        {
+            "x": 397171.78805986495,
+            "y": 5313278.3756107045,
+            "z": -1169.9266775615602
+        },
+        {
+            "x": 397171.811490081,
+            "y": 5313278.656464849,
+            "z": -1171.0304317260475
+        },
+        {
+            "x": 397206.5055007005,
+            "y": 5313694.527862083,
+            "z": -1170.4910106870047
+        },
+        {
+            "x": 397223.05574421963,
+            "y": 5313892.912908202,
+            "z": -1169.9008891318501
+        },
+        {
+            "x": 397223.8684415207,
+            "y": 5313902.654577041,
+            "z": -789.9553849565805
+        },
+        {
+            "x": 397224.2340017677,
+            "y": 5313907.036487577,
+            "z": -630.7485503484063
+        },
+        {
+            "x": 397224.58884004585,
+            "y": 5313911.289875637,
+            "z": -484.71842877406834
+        },
+        {
+            "x": 397224.9431296455,
+            "y": 5313915.536686778,
+            "z": -347.8140343416744
+        },
+        {
+            "x": 397225.2948525296,
+            "y": 5313919.752731123,
+            "z": -220.9883903281834
+        },
+        {
+            "x": 397225.6469277753,
+            "y": 5313923.972999167,
+            "z": -103.1992391970216
+        },
+        {
+            "x": 397226.0027130509,
+            "y": 5313928.237738729,
+            "z": 6.575305999999728
+        }
+    ],
+    "metaData": [
+        {
+            "id": "-M19wn-KQoW7WZhT91rx",
+            "metaDatumId": "-M19wn-KQoW7WZhT91rx",
+            "metaDatumLinkId": "-M19wn-KQoW7WZhT91rx",
+            "name": "Network Type",
+            "vendorId": "Acme.NetworkType",
+            "type": "choices",
+            "value": {
+                "name": "Production network",
+                "id": "-M19wpxNxIb-1OHHDv5o",
+                "vendorId": "ProductionNetwork"
+            },
+            "cost": 0,
+            "costPerLength": false,
+            "vendorAttributes": {}
+        },
+        {
+            "id": "-M19x1RPx7i-MNt08thW",
+            "metaDatumId": "-M19x1RPx7i-MNt08thW",
+            "metaDatumLinkId": "-M19x1RPx7i-MNt08thW",
+            "name": "Mask",
+            "vendorId": "Acme.Mask",
+            "type": "choices",
+            "value": {
+                "name": "Included in system",
+                "id": "-M19x4SovPrkAAXFgv96",
+                "vendorId": "IncludedInSystem"
+            },
+            "cost": 0,
+            "costPerLength": false,
+            "vendorAttributes": {}
+        },
+        {
+            "id": "-M19xA_DqngWygA6CXI8",
+            "metaDatumId": "-M19xA_DqngWygA6CXI8",
+            "metaDatumLinkId": "-M19xA_DqngWygA6CXI8",
+            "name": "Overall Heat Transfer Coefficient",
+            "vendorId": "Acme.OverallHeatTransferCoefficient",
+            "type": "numerical",
+            "value": 45.431864,
+            "cost": 0,
+            "costPerLength": false,
+            "vendorAttributes": {},
+            "option": "W/m2/K"
+        },
+        {
+            "id": "-M19xXO5UH3nXaY44ykr",
+            "metaDatumId": "-M19xXO5UH3nXaY44ykr",
+            "metaDatumLinkId": "-M19xXO5UH3nXaY44ykr",
+            "name": "Inside Diameter",
+            "vendorId": "Acme.InsideDiameter",
+            "type": "numerical",
+            "value": 28.7,
+            "cost": 0,
+            "costPerLength": false,
+            "vendorAttributes": {},
+            "option": "cm"
+        },
+        {
+            "id": "-M19xgnbsM5ID9WexfDN",
+            "metaDatumId": "-M19xgnbsM5ID9WexfDN",
+            "metaDatumLinkId": "-M19xgnbsM5ID9WexfDN",
+            "name": "Roughness",
+            "vendorId": "Acme.Roughness",
+            "type": "numerical",
+            "value": 0.003,
+            "cost": 0,
+            "costPerLength": false,
+            "vendorAttributes": {},
+            "option": "cm"
+        },
+        {
+            "id": "-M19xoye7hUdE24R1piT",
+            "metaDatumId": "-M19xoye7hUdE24R1piT",
+            "metaDatumLinkId": "-M19xoye7hUdE24R1piT",
+            "name": "Segment Type",
+            "vendorId": "Acme.SegmentType",
+            "type": "choices",
+            "value": {
+                "name": "Coated",
+                "id": "-M19xvKDjkvgnezvn3p6",
+                "vendorId": "Coated"
+            },
+            "cost": 0,
+            "costPerLength": false,
+            "vendorAttributes": {}
+        },
+        {
+            "id": "-MuLAWSXKX7yL15Ku_Dp",
+            "metaDatumId": "-MuKzFyd8piF3G8nCqjV",
+            "metaDatumLinkId": "-MuLAWSXKX7yL15Ku_Dp",
+            "definitionId": "AcmePOC:Acme.WallThickness[numerical.Length.Short Length]",
+            "name": "Wall Thickness",
+            "vendorId": "Acme.WallThickness",
+            "type": "numerical",
+            "value": 2.5,
+            "cost": 0,
+            "costPerLength": false,
+            "unit": {
+                "unitReadOnly": true,
+                "unitCategory": "Length",
+                "unitDefaultSymbol": "cm",
+                "unitType": "Short Length"
+            },
+            "vendorAttributes": {},
+            "option": "cm"
+        },
+        {
+            "id": "-MuLAZ-9bRa7i7Zr10fB",
+            "metaDatumId": "-MuKzeFFKRRmmhY1Hig3",
+            "metaDatumLinkId": "-MuLAZ-9bRa7i7Zr10fB",
+            "definitionId": "AcmePOC:UValue[numerical.General.U Value]",
+            "name": "U-Value",
+            "vendorId": "Acme.UValue",
+            "type": "numerical",
+            "value": 2.2,
+            "cost": 0,
+            "costPerLength": false,
+            "unit": {
+                "unitCategory": "General",
+                "unitDefaultSymbol": "W/m2/C",
+                "unitType": "U Value",
+                "unitReadOnly": true
+            },
+            "vendorAttributes": {},
+            "option": "W/m2/C"
+        }
+    ],
+    "fromSocketLabel": "A"
+}

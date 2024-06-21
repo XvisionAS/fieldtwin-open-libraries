@@ -211,7 +211,7 @@ export class ProfileExporter {
     }
   }
 
-  // Component of buildFlowlines()
+  // Component of exportProfiles()
   async _buildConn(node, nodeIdx, path, metadataIds, options, projectId, subProjectId, streamId) {
     options.profileType ||= 'default'
     options.samplewidth ||= 1
@@ -279,7 +279,7 @@ export class ProfileExporter {
     }
   }
 
-  // Component of buildFlowlines()
+  // Component of exportProfiles()
   async _buildWell(node, nodeIdx, path, metadataIds, projectId, subProjectId, streamId) {
     // Get the well's trajectory profile and sample the well's depth
     const well = await this.api.getWell(projectId, subProjectId, streamId, node.id)

@@ -1,0 +1,98 @@
+[
+  {
+    "id": "-MYK-deE2mMhjx_ZkzEU",
+    "name": "NC2P1",
+    "type": "well",
+    "isForeign": false,
+    "projectId": "-MYK-de5CLBSrP6xXC0G",
+    "subProjectId": "-MYK-de6thIV5gW4fCB-"
+  },
+  {
+    "id": "-MYK-deFGQUv9mfZY4Hq",
+    "name": "Southern Template",
+    "type": "stagedAsset",
+    "isForeign": false,
+    "projectId": "-MYK-de5CLBSrP6xXC0G",
+    "subProjectId": "-MYK-de6thIV5gW4fCB-"
+  },
+  {
+    "id": "-MYK-deHJRkKtnr_pAtN",
+    "name": "Oil Production #23",
+    "type": "connection",
+    "isForeign": false,
+    "projectId": "-MYK-de5CLBSrP6xXC0G",
+    "subProjectId": "-MYK-de6thIV5gW4fCB-"
+  },
+  {
+    "id": "-MYK-deFGQUv9mfZY4I4",
+    "name": "PLET single #21",
+    "type": "stagedAsset",
+    "isForeign": false,
+    "projectId": "-MYK-de5CLBSrP6xXC0G",
+    "subProjectId": "-MYK-de6thIV5gW4fCB-"
+  },
+  {
+    "id": "-MYK-deHJRkKtnr_pAsw",
+    "name": "Oil Production #8",
+    "type": "connection",
+    "isForeign": false,
+    "projectId": "-MYK-de5CLBSrP6xXC0G",
+    "subProjectId": "-MYK-de6thIV5gW4fCB-"
+  },
+  {
+    "id": "-MYK-deFGQUv9mfZY4ID",
+    "name": "Inline-T #5",
+    "type": "stagedAsset",
+    "isForeign": false,
+    "projectId": "-MYK-de5CLBSrP6xXC0G",
+    "subProjectId": "-MYK-de6thIV5gW4fCB-"
+  },
+  {
+    "id": "-MYK-deHJRkKtnr_pAss",
+    "name": "Oil Production #7",
+    "type": "connection",
+    "isForeign": false,
+    "projectId": "-MYK-de5CLBSrP6xXC0G",
+    "subProjectId": "-MYK-de6thIV5gW4fCB-"
+  },
+  {
+    "id": "-MYK-deFGQUv9mfZY4I9",
+    "name": "Inline-T #1",
+    "type": "stagedAsset",
+    "isForeign": false,
+    "projectId": "-MYK-de5CLBSrP6xXC0G",
+    "subProjectId": "-MYK-de6thIV5gW4fCB-"
+  },
+  {
+    "id": "-MYK-deHJRkKtnr_pAt-",
+    "name": "Oil Production #12",
+    "type": "connection",
+    "isForeign": false,
+    "projectId": "-MYK-de5CLBSrP6xXC0G",
+    "subProjectId": "-MYK-de6thIV5gW4fCB-"
+  },
+  {
+    "id": "-MYK-deFGQUv9mfZY4Ht",
+    "name": "Riser Base #1",
+    "type": "stagedAsset",
+    "isForeign": false,
+    "projectId": "-MYK-de5CLBSrP6xXC0G",
+    "subProjectId": "-MYK-de6thIV5gW4fCB-"
+  },
+  {
+    "id": "-MYK-deHJRkKtnr_pAsz",
+    "name": "Oil Production #12b",
+    "type": "connection",
+    "isForeign": false,
+    "projectId": "-MYK-de5CLBSrP6xXC0G",
+    "subProjectId": "-MYK-de6thIV5gW4fCB-"
+  },
+  {
+    "id": "-MYK-deFGQUv9mfZY4Hr",
+    "name": "Generic FPSO (Turret) #1",
+    "type": "stagedAsset",
+    "isForeign": false,
+    "projectId": "-MYK-de5CLBSrP6xXC0G",
+    "subProjectId": "-MYK-de6thIV5gW4fCB-"
+  }
+]

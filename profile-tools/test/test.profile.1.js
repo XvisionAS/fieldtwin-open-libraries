@@ -11,20 +11,15 @@ const __dirname = path.dirname(__filename)
 
 const TEST_BACKEND_URL = 'http://dummy'
 
-const mockConnection = JSON.parse(
-  fs.readFileSync(
-    path.join(__dirname, 'fixtures/v1.9/-MYK-deHJRkKtnr_pAtN.json'),
-    { encoding: 'utf-8' }
-  )
-)
 const mockWell = JSON.parse(
-  fs.readFileSync(
-    path.join(__dirname, 'fixtures/v1.9/-MYK-deE2mMhjx_ZkzEU.json'),
-    { encoding: 'utf-8' }
-  )
+  fs.readFileSync(path.join(__dirname, 'fixtures/v1.9/-MYK-deE2mMhjx_ZkzEU.json'), { encoding: 'utf-8' })
 )
 
-describe('ProfileExporter', function () {
+const mockConnection = JSON.parse(
+  fs.readFileSync(path.join(__dirname, 'fixtures/v1.9/-MYK-deHJRkKtnr_pAtN.json'), { encoding: 'utf-8' })
+)
+
+describe('ProfileExporter [unit]', function () {
   const exporter = new ProfileExporter(TEST_BACKEND_URL)
 
   describe('getWellAttributes()', function () {

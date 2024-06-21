@@ -32,5 +32,8 @@
   "bugs": {
     "url": "https://github.com/XvisionAS/fieldtwin-open-libraries/issues"
   },
-  "homepage": "https://github.com/XvisionAS/fieldtwin-open-libraries#readme"
+  "homepage": "https://github.com/XvisionAS/fieldtwin-open-libraries#readme",
+  "devDependencies": {
+    "nock": "^14.0.0-beta.7"
+  }
 }

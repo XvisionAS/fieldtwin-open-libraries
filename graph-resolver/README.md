@@ -16,14 +16,6 @@ Possible routes from _Manifold #3_ to _Template 2 slot #1_:
 * `Manifold #3 -> Oil production #4 -> Manifold #1 -> Oil production #3 -> Template 2 slot #1`
 * `Manifold #3 -> Oil production #4 -> Manifold #1 -> Oil production #1 -> Manifold #2 -> Oil production #2 -> Template 2 slot #1`
 
-## Notes
-
-* The connection _category_ (rather than _type_) determines whether the next connection is followed
-  * This allows one route to contain for example - Oil Jumper, Oil Production, Oil Export - 
-    since these 3 different types have the same category
-* The direction of connections is ignored, they may be followed in either direction
-* Pigging loops are not followed
-
 ## Usage
 
 ```js
@@ -189,7 +181,14 @@ Example output from `paths`, containing 2 paths:
 ]
 ```
 
+## Notes
+
 * In each path found the first entry matches `startPoint` and the last entry matches `endPoint`
+* The connection _category_ (rather than _type_) determines whether the next connection is followed
+  * This allows one route to contain for example - Oil Jumper, Oil Production, Oil Export - 
+    since these 3 different types have the same category
+* The direction of connections is ignored, they may be followed in either direction
+* Pigging loops are not followed
 * When `isForeign` is `true` this indicates that the object has been brought in from a linked
   parent project (either a local parent or a remote parent if FieldTwin Collaborate is in use)
   * In this case the item's `projectId` and `subProjectId` and `streamId` will be different

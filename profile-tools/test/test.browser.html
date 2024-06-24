@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Profile tools</title>
+    <style>
+        label {
+            display: inline-block;
+            width: 15em;
+            vertical-align: top;
+        }
+    </style>
+
+    <script type="module">
+        import { ProfileExporter } from '../src/index.js'
+        window.ProfileExporter = ProfileExporter
+    </script>
+
+    <script>
+        function example() {
+            document.getElementById('hostname').value = 'https://backend.demo.fieldtwin.com/'
+            document.getElementById('apiToken').value = '<Replace with token>'
+            document.getElementById('projectId').value = '-M-HHqMifhz6qskW2goc'
+            document.getElementById('subProjectId').value = '-MWZBqfmyxgQ46p_dlg1'
+            document.getElementById('path').value = `
+              [
+                {
+                "id": "-MZCqjqwbDZQ9XTD5I5P",
+                "name": "Manifold #3",
+                "type": "stagedAsset",
+                "isForeign": false,
+                "projectId": "-M-HHqMifhz6qskW2goc",
+                "subProjectId": "-MWZBqfmyxgQ46p_dlg1"
+                },
+                {
+                "id": "-MZCqmEqvokERuFWlVoT",
+                "name": "Oil Production #4",
+                "type": "connection",
+                "isForeign": false,
+                "projectId": "-M-HHqMifhz6qskW2goc",
+                "subProjectId": "-MWZBqfmyxgQ46p_dlg1"
+                },
+                {
+                "id": "-MWxVs0DTt3wspEFwKhR",
+                "name": "Manifold #1",
+                "type": "stagedAsset",
+                "isForeign": false,
+                "projectId": "-M-HHqMifhz6qskW2goc",
+                "subProjectId": "-MWZBqfmyxgQ46p_dlg1"
+                },
+                {
+                "id": "-MWxVuRkprTblYFOExDD",
+                "name": "Oil Production #3",
+                "type": "connection",
+                "isForeign": false,
+                "projectId": "-M-HHqMifhz6qskW2goc",
+                "subProjectId": "-MWZBqfmyxgQ46p_dlg1"
+                },
+                {
+                "id": "-MWymjRPAoVVdClV08ba",
+                "name": "Template 2 slot #1",
+                "type": "stagedAsset",
+                "isForeign": false,
+                "projectId": "-M-HHqMifhz6qskW2goc",
+                "subProjectId": "-MWZBqfmyxgQ46p_dlg1"
+                }
+            ]`
+            document.getElementById('metadata').value = `
+            [
+                { "vendorId": "Std.InnerDiameter" },
+                { "vendorId": "Std.WallThickness" },
+                { "vendorId": "Std.HydraulicRoughness" }
+            ]`
+            document.getElementById('options').value = `
+            {
+                "sampleWidth": 2,
+                "minimumPoints": 10,
+                "simplify": true,
+                "simplifyTolerance": 0.1
+            }`
+        }
+
+        async function run() {
+            let hostname = document.getElementById('hostname').value
+            const apiToken = document.getElementById('apiToken').value
+            const projectId = document.getElementById('projectId').value
+            const subProjectId = document.getElementById('subProjectId').value
+            const pathText = document.getElementById('path').value
+            const metadataText = document.getElementById('metadata').value
+            const optionsText = document.getElementById('options').value
+
+            if (!pathText) {
+                message(`Path JSON is required`)
+                return
+            }
+            const path = JSON.parse(pathText)
+            const metadataIds = metadataText ? JSON.parse(metadataText) : []
+            const options = optionsText ? JSON.parse(optionsText) : {}
+
+            try {
+                message(`Starting`)
+
+                const exporter = new ProfileExporter(hostname)
+                exporter.setAPIToken(apiToken)
+                const data = await exporter.exportProfiles(path, metadataIds, options, projectId, subProjectId)
+
+                message(`Result:`)
+                message(`<pre>${JSON.stringify(data, null, 2)}</pre>`)
+
+            } catch (e) {
+                message(`Failed due to: ${e}`)
+            }
+        }
+
+        function message(msg) {
+            document.getElementById('output').innerHTML += msg + '<br>'
+        }
+    </script>
+</head>
+
+<body>
+    ProfileExporter constructor:<br><br>
+    <label for="hostname">Backend URL</label><input type="text" id="hostname" value="" size="40" placeholder="https://backend.demo.fieldtwin.com"><br>
+    <label for="apiToken">API Token</label><input type="text" id="apiToken" value="" size="20"><br>
+    <br>
+    exportProfiles() parameters:<br><br>
+    <label for="path">Path JSON<br>(output from graph-resolver)</label><textarea id="path" cols="80" rows="10"></textarea><br>
+    <label for="metadata">Metadata IDs JSON<br>(optional)</label><textarea id="metadata" cols="80" rows="8"></textarea><br>
+    <label for="options">Options JSON<br>(optional)</label><textarea id="options" cols="80" rows="8"></textarea><br>
+    <label for="projectId">Project ID</label><input type="text" id="projectId" value="" size="20"><br>
+    <label for="subProjectId">Subproject ID</label><input type="text" id="subProjectId" value="" size="20"> must match the subproject of the path<br>
+    <br>
+    <button onclick="example()">Set example parameters</button> 
+    <button onclick="run()">Run</button><br>
+    <br>
+    <div id="output"></div>
+</body>
+
+<script>
+    if (!window.location.protocol.startsWith('http')) {
+        message(
+            'This page must be served over HTTP or HTTPS for ES Modules to work. ' +
+            'Run a local server with <code>python3 -m http.server</code> then open this file via http://localhost:8000/'
+        )
+    }
+</script>
+</html>

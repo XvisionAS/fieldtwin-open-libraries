@@ -147,6 +147,7 @@ export class ProfileExporter {
    * @throws {Error} if the path is not valid or on failure to call the FieldTwin API
    */
   async exportProfiles(path, metadataIds, options, projectId, subProjectId, streamId) {
+    metadataIds ||= []
     options ||= {}
     /** @type {Point|null} */
     let firstPoint = null

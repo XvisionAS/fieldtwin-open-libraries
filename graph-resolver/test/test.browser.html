@@ -15,9 +15,18 @@
     </script>
 
     <script>
+        function example() {
+            document.getElementById('hostname').value = 'https://backend.demo.fieldtwin.com/'
+            document.getElementById('apiToken').value = '<Replace with token>'
+            document.getElementById('projectId').value = '-M-HHqMifhz6qskW2goc'
+            document.getElementById('subProjectId').value = '-MWZBqfmyxgQ46p_dlg1'
+            document.getElementById('startId').value = '-MZCqjqwbDZQ9XTD5I5P'
+            document.getElementById('endId').value = '-MWymjRPAoVVdClV08ba'
+        }
+
         async function run() {
             let hostname = document.getElementById('hostname').value
-            const apiKey = document.getElementById('apiKey').value
+            const apiToken = document.getElementById('apiToken').value
             const projectId = document.getElementById('projectId').value
             const subProjectId = document.getElementById('subProjectId').value
             const startId = document.getElementById('startId').value
@@ -35,7 +44,7 @@
 
                 const response = await fetch(`${hostname}API/v1.10/${projectId}/subProject/${subProjectId}`, {
                     method: 'GET',
-                    headers: { 'Token': apiKey }
+                    headers: { 'Token': apiToken }
                 })
                 if (!response.ok) {
                     throw new Error(`Failed to get subproject: ${response.status} ${response.statusText}`)
@@ -60,16 +69,17 @@
 </head>
 
 <body>
-    API call parameters:<br>
+    API call parameters:<br><br>
     <label for="hostname">Backend URL</label><input type="text" id="hostname" value="" size="40" placeholder="https://backend.demo.fieldtwin.com"><br>
-    <label for="apiKey">API Key</label><input type="text" id="apiKey" value="" size="20"><br>
+    <label for="apiToken">API Token</label><input type="text" id="apiToken" value="" size="20"><br>
     <label for="projectId">Project ID</label><input type="text" id="projectId" value="" size="20"><br>
     <label for="subProjectId">Subproject ID</label><input type="text" id="subProjectId" value="" size="20"><br>
     <br>
-    findPaths() parameters:<br>
+    findPaths() parameters:<br><br>
     <label for="startId">Starting staged asset ID</label><input type="text" id="startId" value="" size="20"><br>
     <label for="endId">Ending staged asset ID (optional)</label><input type="text" id="endId" value="" size="20"><br>
     <br>
+    <button onclick="example()">Set example parameters</button> 
     <button onclick="run()">Run</button><br>
     <br>
     <div id="output"></div>

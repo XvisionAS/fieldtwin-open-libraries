@@ -9,7 +9,7 @@ declare module "@xvisionas/profile-tools" {
     number, number, number
   ];
 
-  export type ProfileType = 'default' | 'sampled';
+  export type ProfileType = 'default' | 'raw' | 'sampled';
 
   export interface ProfileOptions {
     profileType?: ProfileType;

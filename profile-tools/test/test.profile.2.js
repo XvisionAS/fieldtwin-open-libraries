@@ -44,6 +44,7 @@ mockConnIds.forEach((id) => {
 const mockProjectId = '-MYK-de5CLBSrP6xXC0G'
 const mockSubProjectId = '-MYK-de6thIV5gW4fCB-'
 const mockSeabedDepth = -1234
+const mockSurveyDepth = -1165
 
 // Prevent accidental modification
 Object.freeze(mockPath)
@@ -109,6 +110,7 @@ describe('ProfileExporter [integration]', function () {
       make1kmConn1,
       reverseImportedConn,
       noHeightSamplingImportedConn,
+      rawImportedConn,
       negateBoreZ,
       makeVerticalBore,
     } = options
@@ -158,10 +160,11 @@ describe('ProfileExporter [integration]', function () {
 
     // Mock the API calls made when assembling the exported profiles
 
-    let loadHeaders = {
+    const loadHeadersInit = {
       'accept': 'application/json',
       'authorization': 'Bearer ' + TEST_JWT,
     }
+    let loadHeaders = structuredClone(loadHeadersInit)
     // Load project to get the CRS
     nock(FT_API_URL, { reqheaders: loadHeaders })
       .get(`/${mockProjectId}/basic`)
@@ -181,11 +184,23 @@ describe('ProfileExporter [integration]', function () {
       loadHeaders['simplify'] = 'true'
       loadHeaders['simplify-tolerance'] = '1'
     }
-    mockConnIds.forEach((id, idx) =>
+    mockConnIds.forEach((id, idx) => {
       nock(FT_API_URL, { reqheaders: loadHeaders })
         .get(`/${mockProjectId}/subProject/${mockSubProjectId}/connection/${id}`)
         .reply(200, useConns[idx])
-    )
+    })
+    // For profile type 'raw' we re-request the raw data for the imported connection
+    // This part mocks profile.loadConnectionRaw()
+    if (rawImportedConn) {
+      loadHeaders = {
+        ...loadHeadersInit,
+        'raw-intermediary': 'true',
+      }
+      useImportedConn.intermediaryPoints.forEach((point) => point.z = mockSurveyDepth)
+      nock(FT_API_URL, { reqheaders: loadHeaders })
+        .get(`/${mockProjectId}/subProject/${mockSubProjectId}/connection/${importedConnectionId}`)
+        .reply(200, useImportedConn)
+    }
   }
 
   it('should export a path from 0,0 with relative XY points', async function () {
@@ -514,6 +529,22 @@ describe('ProfileExporter [integration]', function () {
     assert.notEqual(importedConnection.sampled.length, importedPointsLen)
     // Check that the sampled points were used
     assert.equal(imported.profile.length, importedConnection.sampled.length)
+  })
+
+  it('should return raw intermediary points for imported connections for type raw INTE-649', async function () {
+    setupPathGetterMocks({ rawImportedConn: true })
+    const data = await exporter.exportProfiles(
+      mockPath, [], { profileType: 'raw' }, mockProjectId, mockSubProjectId
+    )
+
+    assert.ok(data.profiles.length)
+    const imported = data.profiles.find((p) => p.id === importedConnectionId)
+    assert.ok(imported)
+
+    // Checking points[1] not points[0] since first point is the socket
+    // (first point is the fromCoordinate, second is intermediaryPoints[0])
+    assert.equal(imported.profile[1][2], mockSurveyDepth)
+    assert.equal(imported.profile[2][2], mockSurveyDepth)
   })
 
   it('should throw error for invalid type', async function () {

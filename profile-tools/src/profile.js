@@ -231,6 +231,16 @@ export class ProfileExporter {
       options.simplify,
       options.simplifyTolerance
     )
+    const loadConnectionRaw = async () => this.api.getConnection(
+      projectId,
+      subProjectId,
+      streamId,
+      node.id,
+      undefined,
+      undefined,
+      undefined,
+      true
+    )
 
     // Default to the fully sampled XYZ profile
     let conn = await loadConnectionDefault()
@@ -247,17 +257,21 @@ export class ProfileExporter {
     // For imported connections use some form of the intermediate points
     if (conn.designType === IMPORTED) {
       switch (options.profileType) {
+        case 'sampled':
+          // Use the fully sampled XYZ profile we already have
+          // For imported connections 'sampled' is based on the imported points
+          break
+        case 'raw':
+          // Use the raw imported XYZ points, ignoring connection.noHeightSampling
+          conn = await loadConnectionRaw()
+          // Fall through to default!
         case 'default':
           // Use the imported XYZ points
-          // intermediaryPoints.z is based on connection.noHeightSampling
+          // if !raw then intermediaryPoints.z is based on connection.noHeightSampling
           profile = [conn.fromCoordinate].concat(conn.intermediaryPoints).concat([conn.toCoordinate])
           if (options.simplify) {
             profile = this.simplifyPoints(profile, options.simplifyTolerance)
           }
-          break
-        case 'sampled':
-          // Use the fully sampled XYZ profile we already have
-          // For imported connections 'sampled' is based on the imported points
           break
         default:
           throw new Error(`Unsupported profileType: ${options.profileType}`)

@@ -147,6 +147,7 @@ export class ProfileExporter {
    * @throws {Error} if the path is not valid or on failure to call the FieldTwin API
    */
   async exportProfiles(path, metadataIds, options, projectId, subProjectId, streamId) {
+    options ||= {}
     /** @type {Point|null} */
     let firstPoint = null
     /** @type {Array<ExportedProfile>} */
@@ -214,16 +215,16 @@ export class ProfileExporter {
   // Component of exportProfiles()
   async _buildConn(node, nodeIdx, path, metadataIds, options, projectId, subProjectId, streamId) {
     options.profileType ||= 'default'
-    options.samplewidth ||= 1
+    options.sampleWidth ||= 1
     options.simplifyTolerance ||= 0.1
     options.minimumPoints ||= 10
 
-    const loadConnectionDefault = async (samplewidth) => this.api.getConnection(
+    const loadConnectionDefault = async (sampleWidth) => this.api.getConnection(
       projectId,
       subProjectId,
       streamId,
       node.id,
-      samplewidth || options.samplewidth,
+      sampleWidth || options.sampleWidth,
       options.simplify,
       options.simplifyTolerance
     )
@@ -234,7 +235,7 @@ export class ProfileExporter {
 
     // INTE-666 Adjust sample width to ensure a minimum number of points if the connection is short
     let newSampleWidth = undefined
-    if (options.samplewidth > 1 && profile.length < options.minimumPoints) {
+    if (options.sampleWidth > 1 && profile.length < options.minimumPoints) {
       newSampleWidth = Math.max(Math.floor(conn.length / options.minimumPoints), 1)
       conn = await loadConnectionDefault(newSampleWidth)
       profile = conn.sampled

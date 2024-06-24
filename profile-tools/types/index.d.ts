@@ -13,7 +13,7 @@ declare module "@xvisionas/profile-tools" {
 
   export interface ProfileOptions {
     profileType?: ProfileType;
-    samplewidth?: number;
+    sampleWidth?: number;
     minimumPoints?: number;
     relativePoints?: boolean;
     simplify?: boolean;

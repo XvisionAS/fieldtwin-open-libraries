@@ -394,7 +394,7 @@ describe('ProfileExporter [integration]', function () {
     // so we are testing that the API is called with that sample-every value
     setupPathGetterMocks({ sampling: 77 })
     const data = await exporter.exportProfiles(
-      mockPath, [], { samplewidth: 77 }, mockProjectId, mockSubProjectId
+      mockPath, [], { sampleWidth: 77 }, mockProjectId, mockSubProjectId
     )
     assert.ok(data.profiles.length)
   })
@@ -534,8 +534,8 @@ describe('ProfileExporter [integration]', function () {
   it('should enforce the minimum number of points INTE-666', async function () {
     // Adjust the path to contain 1 connection
     const usePath = structuredClone([mockPath[1], mockPath[2], mockPath[3]])
-    const options1 = { samplewidth: 10, minimumPoints: 20 }
-    const options2 = { samplewidth: 100, minimumPoints: 20 }
+    const options1 = { sampleWidth: 10, minimumPoints: 20 }
+    const options2 = { sampleWidth: 100, minimumPoints: 20 }
 
     // Test 1km connection every 10, min 20, expect 100 points
     setupPathGetterMocks({ make1kmConn1: true, sampling: 10 })

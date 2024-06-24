@@ -65,4 +65,26 @@ declare module "@xvisionas/profile-tools" {
     CRS?: string;
     profiles: Array<ExportedProfile>;
   }
+
+  /* Package exports */
+
+  export function simplify(
+    points: Array<Point>,
+    tolerance: number,
+    highestQuality: boolean
+  ): Array<Point>;
+
+  export class ProfileExporter {
+    constructor(backendURL: string);
+    setJWT(jwt: string): void;
+    setAPIToken(token: string): void;
+    exportProfiles(
+      path: Path,
+      metadataIds: MetaDataRefs,
+      options: ProfileOptions,
+      projectId: string,
+      subProjectId: string,
+      streamId?: string
+    ): Promise<ExportedProfiles>;
+  }
 }

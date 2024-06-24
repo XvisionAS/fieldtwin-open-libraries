@@ -14,6 +14,8 @@ declare module "@xvisionas/graph-resolver" {
     streamId: string;
   }
 
+  /* Package exports */
+
   export function findPaths(
     subProject: string,
     startId: string,

@@ -1,6 +1,6 @@
 # FieldTwin Open Libraries
 
-Javascript code libraries for use with FieldTwin and the FieldTwin API supporting either
+Javascript code libraries for use with FieldTwin and the FieldTwin API, supporting either
 a server side or web browser environment.
 
 ## Resources
@@ -16,6 +16,7 @@ You may find the following resources helpful:
 | Folder                              | Description
 --------------------------------------|-------------
 | [graph-resolver](./graph-resolver/) | Given start and end points, identifies possible routes through connections in a FieldTwin project
+| [profile-tools](./profile-tools/)   | Export 3D profiles and metadata values for a route returned by `graph-resolver`
 
 ## Installation
 

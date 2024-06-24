@@ -23,7 +23,8 @@ const mockWellId = '-MYK-deE2mMhjx_ZkzEU'
 const mockWell = JSON.parse(
   fs.readFileSync(path.join(__dirname, `fixtures/v1.9/${mockWellId}.json`), { encoding: 'utf-8' })
 )
-const mockWellHeight = Math.round(mockWell.z)
+const mockWellDepth = Math.round(mockWell.z)
+const mockWellBoreGap = 10
 
 const mockConnIds = [
   '-MYK-deHJRkKtnr_pAtN',
@@ -87,6 +88,15 @@ describe('ProfileExporter [integration]', function () {
     return points
   }
 
+  // Utility to make a well bore path from well.x,well.y,start to well.x,well.y,start-999 with a given gap
+  function makeBorePath(well, start, gap) {
+    const points = []
+    for (let i = 0; i < 1000; i += gap) {
+      points.push({ x: well.x, y: well.y, z: start - i })
+    }
+    return points
+  }
+
   // Utility to apply the same rounding as used in the JSON output
   function r(val) { return round(val, 4) }
 
@@ -100,6 +110,7 @@ describe('ProfileExporter [integration]', function () {
       reverseImportedConn,
       noHeightSamplingImportedConn,
       negateBoreZ,
+      makeVerticalBore,
     } = options
 
     // Clone the mocked data so we can modify it per test
@@ -139,6 +150,11 @@ describe('ProfileExporter [integration]', function () {
       useWell.wellBores.forEach((bore) => bore.path.forEach((point) => (point.z *= -1)))
       useWell.activeWellBore.path.forEach((point) => (point.z *= -1))
     }
+    if (makeVerticalBore) {
+      const borePath = makeBorePath(useWell, 0, mockWellBoreGap) // start at 0 for referenceLevel seabed
+      useWell.wellBores[0] = borePath
+      useWell.activeWellBore.path = borePath
+    }
 
     // Mock the API calls made when assembling the exported profiles
 
@@ -157,7 +173,7 @@ describe('ProfileExporter [integration]', function () {
     // Load seabed depth for well
     nock(FT_API_URL, { reqheaders: loadHeaders })
       .post(`/${mockProjectId}/subProject/${mockSubProjectId}/heightSamples`)
-      .reply(200, { depths: [mockWellHeight] })
+      .reply(200, { depths: [mockWellDepth] })
     // Load sampled connections referenced from the test path
     // This part mocks profile.loadConnectionDefault()
     loadHeaders['sample-every'] = `${useSampling}`
@@ -529,6 +545,34 @@ describe('ProfileExporter [integration]', function () {
     assert.ok(imported)
     const importedPointsLen = importedConnection.intermediaryPoints.length + 2
     assert.ok(imported.profile.length < importedPointsLen)
+  })
+
+  it('should simplify well bores too', async function () {
+    // Pull data without simplify
+    setupPathGetterMocks({ makeVerticalBore: true })
+    const data1 = await exporter.exportProfiles(
+      mockPath, [], { simplify: false }, mockProjectId, mockSubProjectId
+    )
+    assert.ok(data1.profiles.length)
+    const well1 = data1.profiles.find((p) => p.id === mockWellId)
+    assert.ok(well1)
+
+    // Pull data with simplify true
+    setupPathGetterMocks({ makeVerticalBore: true, simplify: true })
+    const data2 = await exporter.exportProfiles(
+      mockPath, [], { simplify: true, simplifyTolerance: 1 }, mockProjectId, mockSubProjectId
+    )
+    assert.ok(data2.profiles.length)
+    const well2 = data2.profiles.find((p) => p.id === mockWellId)
+    assert.ok(well2)
+
+    // Check initial data is what we expect
+    assert.equal(well1.profile.length, 1000 / mockWellBoreGap)
+
+    // Since 'simplify' in the API does not affect well bores
+    // we need to test that well bores were simplified independently in the integration
+    // we generated a straight line so it should be simplified to 2 points
+    assert.equal(well2.profile.length, 2)
   })
 
   it('should enforce the minimum number of points INTE-666', async function () {

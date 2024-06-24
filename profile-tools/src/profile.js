@@ -147,8 +147,14 @@ export class ProfileExporter {
    * @throws {Error} if the path is not valid or on failure to call the FieldTwin API
    */
   async exportProfiles(path, metadataIds, options, projectId, subProjectId, streamId) {
+    // Defaults
     metadataIds ||= []
     options ||= {}
+    options.profileType ||= 'default'
+    options.sampleWidth ||= 1
+    options.simplifyTolerance ||= 0.1
+    options.minimumPoints ||= 10
+
     /** @type {Point|null} */
     let firstPoint = null
     /** @type {Array<ExportedProfile>} */
@@ -172,7 +178,7 @@ export class ProfileExporter {
       const exportObj =
         node.type === 'connection'
           ? await this._buildConn(node, i, path, metadataIds, options, projectId, subProjectId, streamId)
-          : await this._buildWell(node, i, path, metadataIds, projectId, subProjectId, streamId)
+          : await this._buildWell(node, i, path, metadataIds, options, projectId, subProjectId, streamId)
       const { profile, attributes, label } = exportObj
       const isSimplified = node.type === 'connection' && !!options.simplify
 
@@ -215,10 +221,6 @@ export class ProfileExporter {
 
   // Component of exportProfiles()
   async _buildConn(node, nodeIdx, path, metadataIds, options, projectId, subProjectId, streamId) {
-    options.profileType ||= 'default'
-    options.sampleWidth ||= 1
-    options.simplifyTolerance ||= 0.1
-    options.minimumPoints ||= 10
 
     const loadConnectionDefault = async (sampleWidth) => this.api.getConnection(
       projectId,
@@ -282,7 +284,7 @@ export class ProfileExporter {
   }
 
   // Component of exportProfiles()
-  async _buildWell(node, nodeIdx, path, metadataIds, projectId, subProjectId, streamId) {
+  async _buildWell(node, nodeIdx, path, metadataIds, options, projectId, subProjectId, streamId) {
     // Get the well's trajectory profile and sample the well's depth
     const well = await this.api.getWell(projectId, subProjectId, streamId, node.id)
     const seafloorDepth = await this.api.getObjectDepth(projectId, subProjectId, streamId, well)
@@ -299,6 +301,9 @@ export class ProfileExporter {
       const p1 = profile[0]
       if (p1.x !== well.x || p1.y !== well.y || Math.abs(p1.z) !== seafloorDepth) {
         profile.splice(0, 0, { x: well.x, y: well.y, z: -seafloorDepth })
+      }
+      if (options.simplify) {
+        profile = this.simplifyPoints(profile, options.simplifyTolerance)
       }
       // If the well is the starting point, follow it bottom up
       if (nodeIdx === 0) {

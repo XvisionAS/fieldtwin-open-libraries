@@ -16,6 +16,10 @@ Possible routes from _Manifold #3_ to _Template 2 slot #1_:
 * `Manifold #3 -> Oil production #4 -> Manifold #1 -> Oil production #3 -> Template 2 slot #1`
 * `Manifold #3 -> Oil production #4 -> Manifold #1 -> Oil production #1 -> Manifold #2 -> Oil production #2 -> Template 2 slot #1`
 
+## Compatibility
+
+FieldTwin API v1.9 - v1.10.
+
 ## Usage
 
 ```js

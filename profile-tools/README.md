@@ -8,6 +8,10 @@ This utility builds on [graph-resolver](../graph-resolver/) to:
 The primary use case for this is to integrate FieldTwin with flow assurance tools and simulators.
 It could also be used to export flow paths into another 3D viewer, geospatial or mapping system.
 
+## Compatibility
+
+FieldTwin API v1.10.
+
 ## Usage
 
 ```js

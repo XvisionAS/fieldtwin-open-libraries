@@ -40,11 +40,32 @@ Then bring the package into your project with:
 $ npm install @xvisionas/graph-resolver
 ```
 
-and import it in your (Javascript) code with:
+#### ESM project
+
+Import the package functions into your (Javascript) code in the normal way:
 
 ```js
 import { findPaths } from '@xvisionas/graph-resolver'
 ```
+
+#### CommonJS project
+
+Since the `import` statement is not supported in a CommonJS file you need to use the dynamic
+`import()` function instead. Further, since `await` is not allowed at the top level in CommonJS
+you also need to wrap the import in a small async function:
+
+```js
+/** @type {import('@xvisionas/graph-resolver').findPaths} */
+let findPaths
+(async function () {
+  findPaths = (await import('@xvisionas/graph-resolver')).findPaths
+})()
+```
+
+The wrapper function is not awaited therefore in this example there is a short period of time
+at startup before `findPaths` is defined and available for use. If this is a problem for your
+use case, move the `await import('@xvisionas/graph-resolver')` into the function that requires
+it instead of running the import at the top level.
 
 ### Web application
 

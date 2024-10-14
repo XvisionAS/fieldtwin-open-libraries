@@ -182,9 +182,10 @@ The following attributes are supported in the `options` object.
 All attributes are optional.
 
 * `profileType` - how to handle imported connections
-  * `default` - output the original XYZ points when "connection follows bathymetry" is false,
-    output the original XY points and a height sampled Z when "connection follows bathymetry" is true
-  * `raw` - output the original XYZ points (ignoring "connection follows bathymetry")
+  * `default` - as shown in FieldTwin
+    * export the original XYZ points when "connection follows bathymetry" is false
+    * export the original XY points and a height sampled Z when "connection follows bathymetry" is true
+  * `raw` - export the original XYZ points (ignoring "connection follows bathymetry")
   * `sampled` - generate a sampled XYZ profile the same as for non-imported connections,
     with points at the `sampleWidth` interval
 * `sampleWidth` - the interval of points in the XYZ profile generated for non-imported connections
@@ -206,7 +207,7 @@ All attributes are optional.
 
 ### Notes
 
-* The 3D profile is provided as an array of array[3] where the latter is XYZ format
+* The 3D profile is provided as an array of `number[3]` where the latter is XYZ format
   (northing, easting, height from sea level)
 * As simplification happens last it is possible that a simplified profile will contain fewer points
   than the `minimumPoints` value

@@ -1,5 +1,13 @@
 # Profile tools
 
+## 1.1.1
+
+16 October 2024
+
+* Fix: use `importParams` to identify imported connections when `designType` is not `Imported`
+  * Compatibility: connections imported via `Import > Connections from file` were not given
+    `importParams` before 2024-10-17
+
 ## 1.1.0
 
 24 June 2024

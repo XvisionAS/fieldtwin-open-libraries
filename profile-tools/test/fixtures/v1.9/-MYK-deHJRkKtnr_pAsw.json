@@ -21,7 +21,10 @@
         "y": 5310264.114565239,
         "z": -1171.1481737488207
     },
-    "importParams": {},
+    "importParams": {
+        "uri": "txt::OP-8.xyz",
+        "importDate": "2024-10-16T11:00:48.709Z"
+    },
     "intermediaryPoints": [
         {
             "x": 392068.35864961747,

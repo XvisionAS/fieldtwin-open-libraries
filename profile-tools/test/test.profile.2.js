@@ -28,7 +28,7 @@ const mockWellBoreGap = 10
 
 const mockConnIds = [
   '-MYK-deHJRkKtnr_pAtN',
-  '-MYK-deHJRkKtnr_pAsw', // v2.0 INTE-649 designType: 'Imported', noHeightSampling: true
+  '-MYK-deHJRkKtnr_pAsw', // designType: 'Imported', noHeightSampling: true
   '-MYK-deHJRkKtnr_pAss',
   '-MYK-deHJRkKtnr_pAt-',
   '-MYK-deHJRkKtnr_pAsz',
@@ -55,7 +55,7 @@ describe('ProfileExporter [integration]', function () {
   const exporter = new ProfileExporter(TEST_BACKEND_URL)
   exporter.setJWT(TEST_JWT)
 
-  const importedConnectionIdx = mockConns.findIndex((c) => c.designType === 'Imported')
+  const importedConnectionIdx = mockConns.findIndex((c) => Object.keys(c.importParams || {}).length > 0)
   const importedConnection = mockConns[importedConnectionIdx]
   const importedConnectionId = mockConnIds[importedConnectionIdx]
   if (!importedConnection || !importedConnectionId) {
@@ -111,6 +111,7 @@ describe('ProfileExporter [integration]', function () {
       reverseImportedConn,
       noHeightSamplingImportedConn,
       rawImportedConn,
+      noDesignImportedConn,
       negateBoreZ,
       makeVerticalBore,
     } = options
@@ -147,6 +148,10 @@ describe('ProfileExporter [integration]', function () {
           }
         })
       }
+    }
+    if (noDesignImportedConn) {
+      // v1.1.1 some imported connections have designType: None
+      useImportedConn.designType = 'None'
     }
     if (negateBoreZ) {
       useWell.wellBores.forEach((bore) => bore.path.forEach((point) => (point.z *= -1)))
@@ -545,6 +550,21 @@ describe('ProfileExporter [integration]', function () {
     // (first point is the fromCoordinate, second is intermediaryPoints[0])
     assert.equal(imported.profile[1][2], mockSurveyDepth)
     assert.equal(imported.profile[2][2], mockSurveyDepth)
+  })
+
+  it('should export intermediary points for imported connections of designType None INTE-768', async function () {
+    setupPathGetterMocks({ noDesignImportedConn: true })
+    const data = await exporter.exportProfiles(
+      mockPath, [], { profileType: 'default' }, mockProjectId, mockSubProjectId
+    )
+
+    assert.ok(data.profiles.length)
+    const imported = data.profiles.find((p) => p.id === importedConnectionId)
+    assert.ok(imported)
+
+    // We can just check the number of points as long as sampled.length != imported points length
+    const importedPointsLen = importedConnection.intermediaryPoints.length + 2
+    assert.notEqual(importedConnection.sampled.length, importedPointsLen)
   })
 
   it('should throw error for invalid type', async function () {

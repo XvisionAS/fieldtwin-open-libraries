@@ -12,9 +12,6 @@ import { round } from './utils.js'
  * @typedef {import('@xvisionas/profile-tools').ExportedProfiles} ExportedProfiles
  */
 
-// Connection design type that denotes an imported connection
-const IMPORTED = 'Imported'
-
 // Reduces JSON size by not going to irrelevant decimal places
 const POINT_ROUND_PLACES = 4
 
@@ -132,6 +129,17 @@ export class ProfileExporter {
    */
   simplifyPoints(points, tolerance) {
     return simplify(points, tolerance, true)
+  }
+
+  /**
+   * Returns true if a connection is an imported connection.
+   * @param {any} conn connection
+   * @returns {boolean}
+   */
+  connectionIsImported(conn) {
+    return conn.designType === 'Imported' || (
+      Object.keys(conn.importParams || {}).length > 0
+    )
   }
 
   /**
@@ -255,7 +263,7 @@ export class ProfileExporter {
     }
 
     // For imported connections use some form of the intermediate points
-    if (conn.designType === IMPORTED) {
+    if (this.connectionIsImported(conn)) {
       switch (options.profileType) {
         case 'sampled':
           // Use the fully sampled XYZ profile we already have

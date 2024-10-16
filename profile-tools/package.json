@@ -1,6 +1,6 @@
 {
   "name": "@xvisionas/profile-tools",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "FieldTwin connection profile and metadata export tools",
   "main": "src/index.js",
   "type": "module",
@@ -34,6 +34,6 @@
   },
   "homepage": "https://github.com/XvisionAS/fieldtwin-open-libraries#readme",
   "devDependencies": {
-    "nock": "^14.0.0-beta.7"
+    "nock": "^14.0.0-beta.15"
   }
 }

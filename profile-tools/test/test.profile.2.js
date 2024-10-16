@@ -565,6 +565,7 @@ describe('ProfileExporter [integration]', function () {
     // We can just check the number of points as long as sampled.length != imported points length
     const importedPointsLen = importedConnection.intermediaryPoints.length + 2
     assert.notEqual(importedConnection.sampled.length, importedPointsLen)
+    assert.equal(imported.profile.length, importedPointsLen)
   })
 
   it('should throw error for invalid type', async function () {

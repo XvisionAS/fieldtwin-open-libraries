@@ -78,6 +78,7 @@ declare module "@xvisionas/profile-tools" {
     constructor(backendURL: string);
     setJWT(jwt: string): void;
     setAPIToken(token: string): void;
+    connectionIsImported(conn: any): boolean;
     exportProfiles(
       path: Path,
       metadataIds: MetaDataRefs,

@@ -1,5 +1,11 @@
 # Profile tools
 
+## 1.1.2
+
+16 October 2024
+
+* Expose ProfileExporter.connectionIsImported() in types (no functional changes)
+
 ## 1.1.1
 
 16 October 2024

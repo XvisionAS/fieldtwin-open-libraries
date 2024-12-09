@@ -1,10 +1,17 @@
 # Profile tools
 
+## 1.2.0
+
+9 December 2024
+
+* Add `ProfileExporter.getWellExportBore()` method
+* Remove use of `any` in types
+
 ## 1.1.2
 
 16 October 2024
 
-* Expose ProfileExporter.connectionIsImported() in types (no functional changes)
+* Expose `ProfileExporter.connectionIsImported()` in types (no functional changes)
 
 ## 1.1.1
 

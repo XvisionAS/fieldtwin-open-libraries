@@ -44,9 +44,19 @@ export class ProfileExporter {
   }
 
   /**
+   * Utility to return the exported well bore for a well - 
+   * which is the _active_ bore, or else the first bore, or else undefined.
+   * @param {object} well a well object
+   * @return {object|undefined} a well bore object or undefined
+   */
+  getWellExportBore(well) {
+    return well.activeWellBore || well.wellBores?.[0] || undefined
+  }
+
+  /**
    * Utility to return metadata values for a well. Taken from the well's active
    * bore if it has the required metadata, otherwise from the well itself.
-   * @param {any} well a well object
+   * @param {object} well a well object
    * @param {MetaDataRefs} metadataIds an array of the metadata definition IDs required
    * @returns {Array} an array of attribute objects, or []
    * @throws an error for unrecoverable data mapping issues
@@ -54,7 +64,7 @@ export class ProfileExporter {
   getWellAttributes(well, metadataIds) {
     let boreAttrs, wellAttrs
     // Try the active bore or else the first bore
-    const bore = well.activeWellBore || well.wellBores?.[0]
+    const bore = this.getWellExportBore(well)
     if (bore) {
       boreAttrs = this.buildObjectAttributes(bore, metadataIds)
       if (boreAttrs.length === metadataIds.length) {
@@ -78,13 +88,14 @@ export class ProfileExporter {
   }
 
   /**
-   * Utility to return the trajectory profile data for a well.
-   * @param {any} well a well object
+   * Utility to return the raw trajectory profile data for a well.
+   * Points are relative to the well's reference level.
+   * @param {object} well a well object
    * @return {Array<Point>} the trajectory profile of the well's active bore,
    *                        as an array of points or [] if no bore path is defined
    */
   getWellProfile(well) {
-    const bore = well.activeWellBore || well.wellBores?.[0]
+    const bore = this.getWellExportBore(well)
     if (bore) {
       const path = bore.path || []
       const dummyPath = path.length === 1 && path[0].x === 0 && path[0].y === 0 && path[0].z === 0
@@ -98,7 +109,7 @@ export class ProfileExporter {
    * to being offset from sea level (which is what most FieldTwin z values are).
    * Input z values can be positive or negative (they are just treated as depth).
    * Output z values are negative below sea level, 0 at sea level, positive above sea level.
-   * @param {any} well the well from which to get the reference level
+   * @param {object} well the well from which to get the reference level
    * @param {Array<Point>} points the array of {x,y,z} points to adjust in-place
    * @param {Number} seafloorDepth the depth of the sea floor at the well
    */
@@ -133,7 +144,7 @@ export class ProfileExporter {
 
   /**
    * Returns true if a connection is an imported connection.
-   * @param {any} conn connection
+   * @param {object} conn connection
    * @returns {boolean}
    */
   connectionIsImported(conn) {
@@ -342,7 +353,7 @@ export class ProfileExporter {
 
   /**
    * Extracts the value from a FieldTwin object metaData entry
-   * @param {any} metadata An entry from object.metaData
+   * @param {object} metadata An entry from object.metaData
    * @returns {string|number|boolean|undefined} the metadata value, if any
    */
   getMetadataValue(metadata) {
@@ -367,7 +378,7 @@ export class ProfileExporter {
   /**
    * Takes the metadata from the provided FieldTwin object and returns an array of
    * attribute objects, one attribute per ID requested in the metadataIds array.
-   * @param {any} fieldObj a FieldTwin object (connection or well or well bore)
+   * @param {object} fieldObj a FieldTwin object (connection or well or well bore)
    * @param {MetaDataRefs} metadataIds an array of the metadata definition IDs required
    * @returns {Array<ObjectAttribute>} an array of the resulting attributes
    */

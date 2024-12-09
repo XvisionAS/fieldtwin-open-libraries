@@ -203,7 +203,7 @@ All attributes are optional.
 * `simplifyTolerance` - when `simplify` is `true`, a sequence of points that varies in horizontal/vertical
   distance by less than this value will be considered a straight line and removed
   * default `0.1`, minimum `0.01`
-  * setting a larger tolerance remove more points
+  * setting a larger tolerance removes more points
 
 ### Notes
 
@@ -211,3 +211,7 @@ All attributes are optional.
   (northing, easting, height from sea level)
 * As simplification happens last it is possible that a simplified profile will contain fewer points
   than the `minimumPoints` value
+* If the input path contains a well (`"type": "well"`) it must be the first or last item in the path
+  * Only one well bore is supported
+  * If the well contains multiple well bores, the _active_ bore is exported
+  * If no bore is marked as _active_, the first bore is exported

@@ -173,7 +173,7 @@ describe('ProfileExporter [integration]', function () {
     // Load project to get the CRS
     nock(FT_API_URL, { reqheaders: loadHeaders })
       .get(`/${mockProjectId}/basic`)
-      .reply(200, { id: mockProjectId, name: 'Test Project', CRS: 'EPSG:1234' })
+      .reply(200, { id: mockProjectId, name: 'Test Project', CRS: 'EPSG:1234', coordinateUnits: 'm' })
     // Load wells referenced from the test path
     nock(FT_API_URL, { reqheaders: loadHeaders })
       .get(`/${mockProjectId}/subProject/${mockSubProjectId}/well/${mockWellId}`)
@@ -230,6 +230,7 @@ describe('ProfileExporter [integration]', function () {
     assert.deepStrictEqual(profile1.profile[2], [0, -20, (-1172 - 0)])
     // CRS should not be set when generating relative points
     assert.equal(data.CRS, undefined)
+    assert.equal(data.unit, 'm')
   })
 
   it('should export a path from x,y with absolute XY points', async function () {
@@ -252,6 +253,7 @@ describe('ProfileExporter [integration]', function () {
     assert.deepStrictEqual(profile1.profile[2], [392026, 5308587, (-1172 - 0)])
     // CRS should be set
     assert.equal(data.CRS, 'EPSG:1234')
+    assert.equal(data.unit, 'm')
   })
 
   it('should return metadata per profile', async function () {

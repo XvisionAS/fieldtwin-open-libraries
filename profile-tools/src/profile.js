@@ -181,6 +181,7 @@ export class ProfileExporter {
 
     const project = await this.api.getProject(projectId, true)
     const CRS = project.CRS
+    const unit = project.coordinateUnits || ''
 
     for (let i = 0; i < path.length; i++) {
       const node = path[i]
@@ -234,6 +235,7 @@ export class ProfileExporter {
       subProjectId,
       streamId,
       CRS: options.relativePoints ? undefined : CRS,
+      unit,
       profiles,
     }
   }

@@ -1,5 +1,11 @@
 # Profile tools
 
+## 1.2.1
+
+10 December 2024
+
+* Add `unit` to `ExportedProfiles` return value
+
 ## 1.2.0
 
 9 December 2024

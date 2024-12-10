@@ -63,6 +63,7 @@ declare module "@xvisionas/profile-tools" {
     subProjectId: string;
     streamId?: string;
     CRS?: string;
+    unit: string;
     profiles: Array<ExportedProfile>;
   }
 

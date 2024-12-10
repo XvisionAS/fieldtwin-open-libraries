@@ -95,6 +95,7 @@ Example output:
   "projectId": "-M-HHqMifhz6qskW2goc",
   "subProjectId": "-MWZBqfmyxgQ46p_dlg1",
   "CRS": "EPSG:23032",
+  "unit": "m",
   "profiles": [
     {
       "id": "-MZCqmEqvokERuFWlVoT",
@@ -209,6 +210,8 @@ All attributes are optional.
 
 * The 3D profile is provided as an array of `number[3]` where the latter is XYZ format
   (northing, easting, height from sea level)
+* The returned `unit` is blank if the FieldTwin project does not have a
+  [CRS](https://design.fieldtwin.com/dashboard/#map-settings) or unit system defined
 * As simplification happens last it is possible that a simplified profile will contain fewer points
   than the `minimumPoints` value
 * If the input path contains a well (`"type": "well"`) it must be the first or last item in the path

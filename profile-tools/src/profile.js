@@ -5,6 +5,7 @@ import { round } from './utils.js'
 /**
  * @typedef {import('@xvisionas/profile-tools').Path} Path
  * @typedef {import('@xvisionas/profile-tools').Point} Point
+ * @typedef {import('@xvisionas/profile-tools').WellBoreFrom} WellBoreFrom
  * @typedef {import('@xvisionas/profile-tools').MetaDataRefs} MetaDataRefs
  * @typedef {import('@xvisionas/profile-tools').ProfileOptions} ProfileOptions
  * @typedef {import('@xvisionas/profile-tools').ObjectAttribute} ObjectAttribute
@@ -129,6 +130,88 @@ export class ProfileExporter {
     // Do this even when adjustDepth=0 to get the z values as negative
     // The || 0 is to avoid -0
     points.forEach((pt) => (pt.z = (-Math.abs(pt.z) || 0) + adjustDepth))
+  }
+
+  /**
+   * Trims an array of top-down points from the start to a measured depth.
+   * @param {Array<Point>} points the array of {x,y,z [,depth]} points to adjust in-place
+   * @param {number} md measured depth at which to stop
+   */
+  trimPointsToMD(points, md) {
+    if (md < 0) {
+      throw new Error(`Cannot trim points to negative distance: ${md}`)
+    } else if (md === 0 || points.length < 2) {
+      return
+    }
+
+    let distance = 0
+    const dist = (p2, p1) => {
+      const dx = p2.x - p1.x, dy = p2.y - p1.y, dz = p2.z - p1.z
+      return Math.sqrt((dx * dx) + (dy * dy) + (dz * dz))
+    }
+    for (let i = 0; i < points.length; i++) {
+      if (i > 0) {
+        distance += dist(points[i], points[i - 1])
+      }
+      const p = points[i]
+      // FieldTwin well bores can contain MD as a `depth` attribute in the points
+      // If it's present we'll trust it as being more accurate than our approximated distance
+      if (p.depth) {
+        if (p.depth >= md) {
+          // First point beyond md
+          let keepIndex = i
+          // See if the preceding point is actually closer
+          if (i > 0) {
+            if (Math.abs(points[i - 1].depth - md) < Math.abs(p.depth - md)) {
+              keepIndex = i - 1
+            }
+          }
+          if (keepIndex < points.length - 1) {
+            points.splice(keepIndex + 1)
+          }
+          return
+        }
+      } else if (distance >= md) {
+        // First point beyond md
+        let keepIndex = i
+        // See if the preceding point is actually closer
+        if (i > 0) {
+          const prevDistance = distance - dist(p, points[i - 1])
+          if (Math.abs(prevDistance - md) < Math.abs(distance - md)) {
+            keepIndex = i - 1
+          }
+        }
+        if (keepIndex < points.length - 1) {
+          points.splice(keepIndex + 1)
+        }
+        return
+      }
+    }
+  }
+
+  /**
+   * Trims an array of top-down points from the start to a vertical depth.
+   * @param {Array<Point>} points the array of {x,y,z} points to adjust in-place
+   * @param {number} z depth value at which to stop
+   */
+  trimPointsToZ(points, z) {
+    if (z === 0 || points.length < 2) {
+      return
+    }
+    // Get the last first point above z
+    // (for the case of a horizontal-ish trajectory that crosses z more than once)
+    let keepIndex = points.findLastIndex((p) => p.z > z)
+    if (keepIndex !== -1) {
+      // See if the following point is actually closer
+      if (keepIndex < points.length - 1) {
+        if (Math.abs(points[keepIndex + 1].z - z) < Math.abs(points[keepIndex].z - z)) {
+          keepIndex = keepIndex + 1
+        }
+      }
+      if (keepIndex < points.length - 1) {
+        points.splice(keepIndex + 1)
+      }
+    }
   }
 
   /**
@@ -336,6 +419,14 @@ export class ProfileExporter {
       const p1 = profile[0]
       if (p1.x !== well.x || p1.y !== well.y || Math.abs(p1.z) !== seafloorDepth) {
         profile.splice(0, 0, { x: well.x, y: well.y, z: -seafloorDepth })
+      }
+      // Handle optional bore trimming after conversion to sea level Z, before simplification or reversal
+      if (node.from && node.from.depth) {
+        if (node.from.depthType === 'MD') {
+          this.trimPointsToMD(profile, node.from.depth)
+        } else if (node.from.depthType === 'TVD') {
+          this.trimPointsToZ(profile, -Math.abs(node.from.depth))
+        }
       }
       if (options.simplify) {
         profile = this.simplifyPoints(profile, options.simplifyTolerance)

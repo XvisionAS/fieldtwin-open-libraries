@@ -1,5 +1,12 @@
 # Profile tools
 
+## 1.3.0
+
+11 December 2024
+
+* Add support for optional `from` section for well bores in the input path
+  * When set, exports the bore from that point onwards
+
 ## 1.2.1
 
 10 December 2024

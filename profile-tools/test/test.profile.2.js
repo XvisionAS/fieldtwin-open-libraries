@@ -225,9 +225,9 @@ describe('ProfileExporter [integration]', function () {
     assert.ok(profile1.profile.length)
     // See mockWell.activeWellBore.path,
     // should go up (from the end of the bore) when path starts at a well
-    assert.deepStrictEqual(profile1.profile[0], [0, 0, (-1172 - 60)])
-    assert.deepStrictEqual(profile1.profile[1], [0, -10, (-1172 - 30)])
-    assert.deepStrictEqual(profile1.profile[2], [0, -20, (-1172 - 0)])
+    assert.deepStrictEqual(profile1.profile[0], [0, 0, (mockWellDepth - 60)])
+    assert.deepStrictEqual(profile1.profile[1], [0, -10, (mockWellDepth - 30)])
+    assert.deepStrictEqual(profile1.profile[2], [0, -20, (mockWellDepth - 0)])
     // CRS should not be set when generating relative points
     assert.equal(data.CRS, undefined)
     assert.equal(data.unit, 'm')
@@ -248,9 +248,9 @@ describe('ProfileExporter [integration]', function () {
     assert.ok(profile1.profile.length)
     // See mockWell.activeWellBore.path,
     // should go up (from the end of the bore) when path starts at a well
-    assert.deepStrictEqual(profile1.profile[0], [392026, 5308607, (-1172 - 60)])
-    assert.deepStrictEqual(profile1.profile[1], [392026, 5308597, (-1172 - 30)])
-    assert.deepStrictEqual(profile1.profile[2], [392026, 5308587, (-1172 - 0)])
+    assert.deepStrictEqual(profile1.profile[0], [392026, 5308607, (mockWellDepth - 60)])
+    assert.deepStrictEqual(profile1.profile[1], [392026, 5308597, (mockWellDepth - 30)])
+    assert.deepStrictEqual(profile1.profile[2], [392026, 5308587, (mockWellDepth - 0)])
     // CRS should be set
     assert.equal(data.CRS, 'EPSG:1234')
     assert.equal(data.unit, 'm')
@@ -652,5 +652,40 @@ describe('ProfileExporter [integration]', function () {
     )
     assert.equal(data.profiles.length, 1)
     assert.equal(data.profiles[0].profile.length, 20)
+  })
+
+  it('should trim a well bore given a \'from\' parameter', async function() {
+    setupPathGetterMocks()
+    // Baseline test
+    let usePath = structuredClone(mockPath)
+    let data = await exporter.exportProfiles(
+      usePath, [], { profileType: 'default' }, mockProjectId, mockSubProjectId
+    )
+    // First profile should be for the well NC2P1, see mockWell.activeWellBore.path,
+    // going up (from the end of the bore) since the well is the start point
+    let profile = data.profiles[0]
+    assert.deepStrictEqual(profile.id, mockWellId)
+    assert.deepStrictEqual(profile.profile.length, 3)
+    assert.deepStrictEqual(profile.profile[0], [392026, 5308607, (mockWellDepth - 60)])
+    assert.deepStrictEqual(profile.profile[1], [392026, 5308597, (mockWellDepth - 30)])
+    assert.deepStrictEqual(profile.profile[2], [392026, 5308587, (mockWellDepth - 0)])
+
+    const tests = [
+      { depth: 30, depthType: 'MD' },
+      { depth: mockWellDepth - 30, depthType: 'TVD' }, // -1202
+      { depth: 1202, depthType: 'TVD' }, // should be treated the same as -1202
+    ]
+    for (const test of tests) {
+      usePath[0].from = test
+      setupPathGetterMocks()
+      data = await exporter.exportProfiles(
+        usePath, [], { profileType: 'default' }, mockProjectId, mockSubProjectId
+      )
+      profile = data.profiles[0]
+      assert.deepStrictEqual(profile.id, mockWellId)
+      assert.deepStrictEqual(profile.profile.length, 2)
+      assert.deepStrictEqual(profile.profile[0], [392026, 5308597, (mockWellDepth - 30)])
+      assert.deepStrictEqual(profile.profile[1], [392026, 5308587, (mockWellDepth - 0)])
+    }
   })
 })

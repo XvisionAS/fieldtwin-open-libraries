@@ -303,4 +303,150 @@ describe('ProfileExporter [unit]', function () {
       assert.deepStrictEqual(result, [])
     })
   })
+
+  describe('trimPointsToMD()', function () {
+    it('should fail if MD is negative', function () {
+      try {
+        exporter.trimPointsToMD([], -1)
+        assert.fail('expected function call to fail')
+      } catch (e) {
+        assert.ok(String(e).includes('negative distance'))
+      }
+    })
+
+    it('should do nothing without enough points', function () {
+      const points1 = []
+      exporter.trimPointsToMD(points1, 100)
+      assert.deepEqual(points1, [])
+      const points2 = [{x: 0, y: 0, z: 0}]
+      exporter.trimPointsToMD(points2, 100)
+      assert.deepEqual(points2, [{x: 0, y: 0, z: 0}])
+    })
+
+    it('should trim to nearest calculated MD', function () {
+      const points1 = [
+        {x: 0, y: 0, z: -100},
+        {x: 10, y: 10, z: -110}, // MD 17.32
+        {x: 20, y: 20, z: -120}, // MD 34.64
+        {x: 30, y: 30, z: -130}, // MD 51.96
+        {x: 40, y: 40, z: -140}, // MD 69.28
+        {x: 50, y: 50, z: -150}, // MD 86.60
+      ]
+      const points2 = [...points1]
+      const points3 = [...points1]
+      exporter.trimPointsToMD(points1, 55)
+      assert.deepEqual(points1, [
+        {x: 0, y: 0, z: -100},
+        {x: 10, y: 10, z: -110},
+        {x: 20, y: 20, z: -120},
+        {x: 30, y: 30, z: -130},
+      ])
+      exporter.trimPointsToMD(points2, 65)
+      assert.deepEqual(points2, [
+        {x: 0, y: 0, z: -100},
+        {x: 10, y: 10, z: -110},
+        {x: 20, y: 20, z: -120},
+        {x: 30, y: 30, z: -130},
+        {x: 40, y: 40, z: -140},
+      ])
+      exporter.trimPointsToMD(points3, 2000)
+      assert.deepEqual(points3, [
+        {x: 0, y: 0, z: -100},
+        {x: 10, y: 10, z: -110},
+        {x: 20, y: 20, z: -120},
+        {x: 30, y: 30, z: -130},
+        {x: 40, y: 40, z: -140},
+        {x: 50, y: 50, z: -150},
+      ])
+    })
+
+    it('should trim using existing MD if MD is present in data', function () {
+      // FieldTwin well bores can have a `depth` attribute already in the points
+      // If it is present then we will trust it
+      const points1 = [
+        {x: 0, y: 0, z: -100, depth: 0},
+        {x: 10, y: 10, z: -110, depth: 50},
+        {x: 20, y: 20, z: -120, depth: 100},
+        {x: 30, y: 30, z: -130, depth: 150},
+        {x: 40, y: 40, z: -140, depth: 200},
+        {x: 50, y: 50, z: -150, depth: 250},
+      ]
+      exporter.trimPointsToMD(points1, 55)
+      assert.deepEqual(points1, [
+        {x: 0, y: 0, z: -100, depth: 0},
+        {x: 10, y: 10, z: -110, depth: 50},
+      ])
+    })
+  })
+
+  describe('trimPointsToZ()', function () {
+    it('should do nothing without enough points', function () {
+      const points1 = []
+      exporter.trimPointsToZ(points1, 100)
+      assert.deepEqual(points1, [])
+      const points2 = [{x: 0, y: 0, z: 0}]
+      exporter.trimPointsToZ(points2, 100)
+      assert.deepEqual(points2, [{x: 0, y: 0, z: 0}])
+    })
+
+    it('should trim to nearest Z in vertical well', function () {
+      const points1 = [
+        {x: 0, y: 0, z: -100},
+        {x: 10, y: 10, z: -110},
+        {x: 20, y: 20, z: -120},
+        {x: 30, y: 30, z: -130},
+        {x: 40, y: 40, z: -140},
+        {x: 50, y: 50, z: -150},
+      ]
+      const points2 = [...points1]
+      const points3 = [...points1]
+      exporter.trimPointsToZ(points1, -122)
+      assert.deepEqual(points1, [
+        {x: 0, y: 0, z: -100},
+        {x: 10, y: 10, z: -110},
+        {x: 20, y: 20, z: -120},
+      ])
+      exporter.trimPointsToZ(points2, -128)
+      assert.deepEqual(points2, [
+        {x: 0, y: 0, z: -100},
+        {x: 10, y: 10, z: -110},
+        {x: 20, y: 20, z: -120},
+        {x: 30, y: 30, z: -130},
+      ])
+      exporter.trimPointsToZ(points3, -2000)
+      assert.deepEqual(points3, [
+        {x: 0, y: 0, z: -100},
+        {x: 10, y: 10, z: -110},
+        {x: 20, y: 20, z: -120},
+        {x: 30, y: 30, z: -130},
+        {x: 40, y: 40, z: -140},
+        {x: 50, y: 50, z: -150},
+      ])
+    })
+
+    it('should trim to nearest Z in horizontal well', function () {
+      // A horizontal-ish well could rise and fall to touch the Z point multiple times
+      // If so we will take the bore through to the final touch point
+      const points1 = [
+        {x: 0, y: 0, z: -100},
+        {x: 10, y: 10, z: -110},
+        {x: 20, y: 20, z: -120}, // not to here
+        {x: 30, y: 30, z: -110},
+        {x: 40, y: 40, z: -100},
+        {x: 50, y: 50, z: -110},
+        {x: 60, y: 60, z: -120}, // but here
+        {x: 70, y: 70, z: -130},
+      ]
+      exporter.trimPointsToZ(points1, -120)
+      assert.deepEqual(points1, [
+        {x: 0, y: 0, z: -100},
+        {x: 10, y: 10, z: -110},
+        {x: 20, y: 20, z: -120},
+        {x: 30, y: 30, z: -110},
+        {x: 40, y: 40, z: -100},
+        {x: 50, y: 50, z: -110},
+        {x: 60, y: 60, z: -120},
+      ])
+    })
+  })
 })

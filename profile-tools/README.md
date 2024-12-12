@@ -218,3 +218,52 @@ All attributes are optional.
   * Only one well bore is supported
   * If the well contains multiple well bores, the _active_ bore is exported
   * If no bore is marked as _active_, the first bore is exported
+* All exported `z` (depth) values are relative to sea level
+  * In particular, `z` values stored in the well bore path are converted from initially
+    being relative to the well's _reference level_
+
+## Well bore export control
+
+In the case where FieldTwin holds the full drilling path of a well bore but not all of that
+path is relevant for flow assurance, an optional `from` object can be added to the input data.
+This could be set to the location of the top or bottom perforation, for example. It is specified
+as a depth value and how to interpret the depth (as MD or TVD from sea level). When a `from`
+location is set, the exported profile will begin at that point.
+
+Example input:
+
+```js
+const path = [
+    {
+        "id": "-ODozhGETDrNsJHizWz2",
+        "name": "F-15B",
+        "type": "well",
+        "from": {
+          "depth": 1580,
+          "depthType": "MD"
+        }
+    },
+    {
+        "id": "-ODp-5sJSKhWLaqP-UFa",
+        "name": "F-15B-XMT-A",
+        "type": "stagedAsset"
+    },
+    {
+        "id": "-ODpXJ2JgvnyaY4GP3nh",
+        "name": "Oil Production Spool #18",
+        "type": "connection"
+    },
+    {
+        "id": "-ODpXJL12SserOx59Hv3",
+        "name": "Manifold #7",
+        "type": "stagedAsset"
+    }
+]
+```
+
+* `from` is only supported on path items of type `well`
+* The `depth` value must be provided in the project unit (meters or feet)
+* If `depthType` is `MD`, this indicates measured depth from the top of the well
+  and is always a positive number
+* If `depthType` is `TVD`, this indicates depth from sea level, **not** depth from the well
+  or from the well's _reference level_

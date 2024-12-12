@@ -9,6 +9,11 @@ declare module "@xvisionas/profile-tools" {
     number, number, number
   ];
 
+  export interface WellBoreFrom {
+    depth: number;
+    depthType: 'MD' | 'TVD';
+  }
+
   export type ProfileType = 'default' | 'raw' | 'sampled';
 
   export interface ProfileOptions {
@@ -45,6 +50,7 @@ declare module "@xvisionas/profile-tools" {
     id: string;
     name: string;
     type: "connection" | "well" | "stagedAsset";
+    from?: WellBoreFrom;
   }
 
   export type Path = Array<IPathItem>;

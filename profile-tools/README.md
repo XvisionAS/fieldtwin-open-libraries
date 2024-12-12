@@ -222,7 +222,7 @@ All attributes are optional.
   * In particular, `z` values stored in the well bore path are converted from initially
     being relative to the well's _reference level_
 
-## Well bore export control
+## Well bore trimming
 
 In the case where FieldTwin holds the full drilling path of a well bore but not all of that
 path is relevant for flow assurance, an optional `from` object can be added to the input data.

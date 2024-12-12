@@ -227,8 +227,10 @@ All attributes are optional.
 In the case where FieldTwin holds the full drilling path of a well bore but not all of that
 path is relevant for flow assurance, an optional `from` object can be added to the input data.
 This could be set to the location of the top or bottom perforation, for example. It is specified
-as a depth value and how to interpret the depth (as MD or TVD from sea level). When a `from`
-location is set, the exported profile will begin at that point.
+as a depth value and how to interpret the depth (as MD or TVD from sea level).
+
+When a `from` location is set, the exported profile will begin from the point in the well bore
+path closest to that location.
 
 Example input:
 

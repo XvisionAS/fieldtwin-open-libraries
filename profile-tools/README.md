@@ -267,5 +267,5 @@ const path = [
 * The `depth` value must be provided in the project unit (meters or feet)
 * If `depthType` is `MD`, this indicates measured depth from the top of the well
   and is always a positive number
-* If `depthType` is `TVD`, this indicates depth from sea level, **not** depth from the well
-  or from the well's _reference level_
+* If `depthType` is `TVD`, this indicates vertical depth from sea level,
+  **not** vertical depth from the well or from the well's _reference level_

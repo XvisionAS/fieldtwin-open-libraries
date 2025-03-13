@@ -4,6 +4,7 @@ import { describe, it } from 'node:test'
 import { findPaths } from '../src/index.js'
 import { ids, subProject as subProject109  } from './fixtures/v1.9/-MWZBqfmyxgQ46p_dlg1.js'
 import { subProject as subProject110 } from './fixtures/v1.10/-MWZBqfmyxgQ46p_dlg1.js'
+import { subProject as subProjectParallel } from './fixtures/v1.10/-MW4y5RpTyQ-m9FywBcW.js'
 
 const suites = [
   { apiVersion: '1.9', subProject: subProject109 },
@@ -11,7 +12,7 @@ const suites = [
 ]
 
 describe('graph-resolver', function () {
-  describe('#findPaths()', function () {
+  describe('#findPaths() basic', function () {
     for (const suite of suites) {
       const apiVersion = suite.apiVersion
       const subProject = suite.subProject
@@ -131,5 +132,40 @@ describe('graph-resolver', function () {
         })
       })
     }
+  })
+
+  describe('#findPaths() parallel', function () {
+    it('should find 2 paths between the XMT and the FPSO v1.1.0', function () {
+      const xmt = '-OAJ4b2uHCCr-MX3dD3x'
+      const fpso = '-OAJ4b2vuqJqqFfz_7RK'
+      const categoryId = 264
+      const paths = findPaths(subProjectParallel, xmt, fpso, categoryId)
+      assert.deepStrictEqual(paths.length, 2)
+      // Expect 1 path via Oil Production #8
+      const path1 = paths[0]
+      const path1Names = path1.map((obj) => obj.name)
+      assert.deepStrictEqual(path1Names, [
+        'XMT deep water #2', 'Oil Production #7', 'Manifold #3', 'Oil Production #8', 'Inline-T #2',
+        'Oil Production #9', 'PLEM #2', 'Oil Production #10', 'Riser Base #2', 'Oil Production #11',
+        'Generic FPSO (Turret) #2'
+      ])
+      // Expect 1 path via Oil Production #12
+      const path2 = paths[1]
+      const path2Names = path2.map((obj) => obj.name)
+      assert.deepStrictEqual(path2Names, [
+        'XMT deep water #2', 'Oil Production #7', 'Manifold #3', 'Oil Production #12', 'Inline-T #3',
+        'Oil Production #13', 'PLEM #2', 'Oil Production #10', 'Riser Base #2', 'Oil Production #11',
+        'Generic FPSO (Turret) #2'
+      ])
+    })
+
+    it('should not travel the same connection in both directions v1.1.0', function () {
+      const xmt = '-OAJ4b2uHCCr-MX3dD3x'
+      const categoryId = 264
+      const paths = findPaths(subProjectParallel, xmt, undefined, categoryId)
+
+      // In < v1.1 these paths followed Oil Production #7 back down again
+      assert.fail('add me')
+    })
   })
 })

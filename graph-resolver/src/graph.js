@@ -55,14 +55,14 @@ const getAssetIdForWell = (subProject, wellId) => {
   return parentId
 }
 
-const TRACE = false
+const TRACE = true
 const trace = (msg) => TRACE ? console.log(msg) : undefined
 
 /**
  * This function will walk the topology of a subproject, outputting a tree of possible paths.
  * It starts by getting all the connections from the asset or well with id `startingId`, then:
  * - If `currentConnectionId` is defined, it means that the current call came from recursion.
- *   We need to make sure that the next recursion is on a connection that has the same `type`.
+ *   We need to make sure that the next recursion is on a connection that has the same `category`.
  *   We also make sure if a connection arrive at a labelled socket, the next recursion starts
  *   at a socket with the same label. Kind of mimicking internal wiring.
  * - If `currentConnectionId` is not defined, we just go through all the connections.
@@ -208,7 +208,7 @@ export const generateGraph = (
         const internalToSocketName = stagedAsset.connectionsAsFrom[connectionId]
           ? connection.fromSocket
           : connection.toSocket
-        trace(`Looking at 'to' socket name: ${JSON.stringify(internalToSocketName)}`)
+        trace(`Looking to follow connection from asset socket: ${JSON.stringify(internalToSocketName)}`)
 
         // Next staged asset is connected on the other hand of the connection
         const internalToSocket = sockets2d?.[internalToSocketName]
@@ -349,7 +349,7 @@ export const generateDisplayPathsFromGraph = (subProject, graphRoot, endId = '')
           const fullWell = subProject.wells[well.id]
           // #73 asset.well or metadatum.well might have been deleted
           if (fullWell) {
-            displayPaths.push([
+            const thisPath = [
               ...currentPath,
               new PathItem(
                 well.id,
@@ -360,7 +360,9 @@ export const generateDisplayPathsFromGraph = (subProject, graphRoot, endId = '')
                 fullWell.subProjectDocumentId || fullWell.subProject || subProject.id,
                 fullWell.streamId || ''
               ),
-            ])
+            ]
+            displayPaths.push(thisPath)
+            trace(`Generated path ${thisPath.map((item) => item.name).join(' -> ')}`)
           }
         })
       }
@@ -372,20 +374,26 @@ export const generateDisplayPathsFromGraph = (subProject, graphRoot, endId = '')
     } else {
       // The end of the path
       displayPaths.push(currentPath)
+      trace(`Generated path ${currentPath.map((item) => item.name).join(' -> ')}`)
     }
   }
 
   /** @type {Array<Path>} */
   let displayPaths = []
+  trace(`generateDisplayPathsFromGraph(): Start`)
   display(graphRoot, displayPaths, [])
+  trace(`Generated ${displayPaths.length} paths`)
 
   // If a path is a single asset, it's not a path, don't return it.
   // But if it's a single well, allow it, to use the path of the well bore.
   displayPaths = displayPaths.filter(
     (path) => path.length > 1 || (path.length == 1 && path[0].type === 'well')
   )
+  trace(`After filtering single node paths have ${displayPaths.length} paths`)
+
   if (endId) {
     displayPaths = displayPaths.filter(path => endId == path[path.length - 1].id)
+    trace(`After filtering paths for end point have ${displayPaths.length} paths`)
   }
   return displayPaths
 }

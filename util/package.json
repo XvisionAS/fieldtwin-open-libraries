@@ -1,0 +1,7 @@
+{
+  "type": "module",
+  "dependencies": {
+    "@xvisionas/graph-resolver": "^1.0.1",
+    "@xvisionas/profile-tools": "^1.3.0"
+  }
+}

@@ -70,12 +70,12 @@ const trace = (msg) => TRACE ? console.log(msg) : undefined
  * @param {string} startingId the id of the asset or well to start walking from
  * @param {string} [endId] the id of the asset or well to end
  * @param {string|number} [connectionCategoryId] if defined, will only traverse connection with category equal to this value
- * @param {Object} [visited] is an object (stagedAssetId => socketLabel => true) of all already
- *                 visited stagedAssets, this is use to avoid infinite recursion while traversing the graph
+ * @param {Object} [visited] is an object[stagedAssetId][socketLabel] of already visited stagedAssets
+ *                           used to avoid infinite recursion while traversing the graph
  * @param {string} [stagedAssetId] the id of the asset to walk from next (undefined for the first call)
  * @param {string} [currentConnectionId] is the connection that initiated this call (undefined for the first call)
- * @param {string} [fromConnectionSocketName] is the socket the connection arrived to on `stagedAssetId`
- * @returns {Object|undefined} the root node of the graph structure
+ * @param {string} [currentSocketName] is the socket the connection arrived at on `stagedAssetId` (undefined for the first call)
+ * @returns {Object|undefined} a node of the graph structure (the root node for the top level call)
  */
 export const generateGraph = (
   subProject,
@@ -85,7 +85,7 @@ export const generateGraph = (
   visited = {},
   stagedAssetId,
   currentConnectionId,
-  fromConnectionSocketName
+  currentSocketName
 ) => {
   let wellId
   const initialRecursion = !stagedAssetId
@@ -109,16 +109,15 @@ export const generateGraph = (
   }
 
   const stagedAsset = subProject.stagedAssets[stagedAssetId]
-  const currentConnection =
-    currentConnectionId != undefined && subProject.connections[currentConnectionId]
-
+  const currentConnection = currentConnectionId && subProject.connections[currentConnectionId]
   trace(`At staged asset ${stagedAsset?.name} from connection ${currentConnection?.params?.label}`)
 
   if (!stagedAsset) {
     trace(`Stop: can't find asset`)
     return
   }
-  // 'Pigging Loops' don't form a path: https://tinyurl.com/r2c26tj4
+
+  // Pigging Loops don't form a path
   const assetName = (stagedAsset.asset?.name || '').toLowerCase()
   const assetCategory = (stagedAsset.asset?.category || '').toLowerCase()
   if (assetName === 'pigging loop' || assetCategory === 'pigging loop') {
@@ -126,6 +125,19 @@ export const generateGraph = (
     return
   }
 
+  // Get the socket name and label that the connection arrived at on stagedAsset
+  const sockets2d = {}
+  const socketsAsArray = stagedAsset.sockets2d || stagedAsset.asset.sockets2d
+  for (let i = 0; i < socketsAsArray.length; ++i) {
+    const s = socketsAsArray[i]
+    sockets2d[s.name] = s
+  }
+  const internalFromSocket = sockets2d[currentSocketName]
+  const internalFromSocketLabel = internalFromSocket?.label ?? ''
+  const internalFromSocketName = internalFromSocket?.name
+  trace(`Arrived at staged asset ${stagedAsset.name} on socket name: ${JSON.stringify(internalFromSocketName)}`)
+
+  // The node object to return (if ok)
   const node = {
     wellId, // optional, on root node only
     connectionFromId: currentConnectionId,
@@ -134,27 +146,10 @@ export const generateGraph = (
     stagedAssetId,
     stagedAsset,
     stagedAssetName: stagedAsset.name,
-    internalFromSocketLabel: undefined,
-    internalFromSocketName: undefined,
+    internalFromSocketLabel,
+    internalFromSocketName,
     children: [],
   }
-
-  // Create an index of the sockets
-  const sockets2d = {}
-  const socketsAsArray = stagedAsset.sockets2d || stagedAsset.asset.sockets2d
-  for (let i = 0; i < socketsAsArray.length; ++i) {
-    const s = socketsAsArray[i]
-    sockets2d[s.name] = s
-  }
-  trace(`All asset sockets are: ${JSON.stringify(sockets2d)}`)
-
-  const internalFromSocket = sockets2d[fromConnectionSocketName]
-  const internalFromSocketLabel = internalFromSocket?.label ?? ''
-  const internalFromSocketName = internalFromSocket?.name
-  trace(`Arrived on socket name: ${JSON.stringify(internalFromSocketName)}`)
-
-  node.internalFromSocketLabel = internalFromSocketLabel
-  node.internalFromSocketName = internalFromSocketName
 
   if (!initialRecursion && startingId === stagedAssetId) {
     // End of path, we are back at the origin
@@ -171,7 +166,7 @@ export const generateGraph = (
   // Check if we already visited this node, mark this asset + socket as visited
   // so that we are sure to not start an infinite loop
   const socketLabel = internalFromSocketLabel || internalFromSocketName || '_unknown_socket'
-  visited[stagedAssetId] = visited[stagedAssetId] || {}
+  visited[stagedAssetId] ||= {}
   if (visited[stagedAssetId][socketLabel]) {
     trace(`Stop: arrived at previously visited socket ${stagedAssetId}:${socketLabel}`)
     return
@@ -181,7 +176,7 @@ export const generateGraph = (
 
   const connectionsAsFrom = stagedAsset.connectionsAsFrom || {}
   const connectionsAsTo = stagedAsset.connectionsAsTo || {}
-  const connections = {
+  const assetConnectionIds = {
     ...connectionsAsFrom,
     ...connectionsAsTo,
   }
@@ -189,65 +184,66 @@ export const generateGraph = (
   const currentType = currentConnection?.definition?.category?.id
   trace(`Current connection category is ${currentType}`)
 
-  Object.keys(connections).forEach((connectionId) => {
-    if (currentConnectionId !== connectionId) {
-      const connection = subProject.connections[connectionId]
-      if (!connection) {
-        trace(`Ignoring connection ${connectionId} as it does not exist`)
-        return
-      }
-      trace(`Connections loop: looking at connection ${connectionId} from staged asset ${stagedAsset.name}`)
+  Object.keys(assetConnectionIds).forEach((connectionId) => {
+    if (connectionId === currentConnectionId) {
+      return
+    }
+    const connection = subProject.connections[connectionId]
+    if (!connection) {
+      trace(`Ignoring connection ${connectionId} as it does not exist`)
+      return
+    }
+    trace(`Connections loop: looking at connection ${connectionId} from staged asset ${stagedAsset.name}`)
 
-      // #21 Check type with loose equality == to handle type ID: 1 connectionTypeCategory: '1'
-      const categoryId = connection?.definition?.category?.id
-      if (
-        (!currentConnectionId || categoryId == currentType) &&
-        (!connectionCategoryId || categoryId == connectionCategoryId)
-      ) {
-        // Take the socket on the current asset
-        const internalToSocketName = stagedAsset.connectionsAsFrom[connectionId]
-          ? connection.fromSocket
-          : connection.toSocket
-        trace(`Looking to follow connection from asset socket: ${JSON.stringify(internalToSocketName)}`)
+    // #21 Check type with loose equality == to handle type ID: 1 connectionTypeCategory: '1'
+    const categoryId = connection?.definition?.category?.id
+    if (
+      (!currentConnectionId || categoryId == currentType) &&
+      (!connectionCategoryId || categoryId == connectionCategoryId)
+    ) {
+      // Get the departure socket on the current asset
+      const internalToSocketName = stagedAsset.connectionsAsFrom[connectionId]
+        ? connection.fromSocket
+        : connection.toSocket
+      const internalToSocket = sockets2d?.[internalToSocketName]
+      const internalToSocketLabel = internalToSocket?.label ?? ''
+      trace(`Looking to follow connection ${connectionId} from asset socket: ${JSON.stringify(internalToSocketName)}`)
 
-        // Next staged asset is connected on the other hand of the connection
-        const internalToSocket = sockets2d?.[internalToSocketName]
-        const internalToSocketLabel = internalToSocket?.label ?? ''
+      // Next staged asset is connected to the other end of the connection
 
-        // Here we make sure that the sockets 'connecting' the two connections (one that arrive to the staged asset, and the one that go from it)
-        // use the same socket label. This gives the user the possibility to give a route even if multiple connections follow the same path
-        // if `currentConnectionId` is undefined, this is the initial recursion, so we do not care about label.
-        if (!currentConnectionId || internalToSocketLabel === internalFromSocketLabel) {
-          const nextStagedAssetId = stagedAsset.connectionsAsFrom[connectionId]
-            ? connection.to
-            : connection.from
+      // Here we make sure that the sockets 'connecting' the two connections (one that arrive to the staged asset, and the one that go from it)
+      // use the same socket label. This gives the user the possibility to give a route even if multiple connections follow the same path
+      // if `currentConnectionId` is undefined, this is the initial recursion, so we do not care about label.
+      if (!currentConnectionId || internalToSocketLabel === internalFromSocketLabel) {
+        const nextStagedAssetId = stagedAsset.connectionsAsFrom[connectionId]
+          ? connection.to
+          : connection.from
 
-          const nextSocketName = stagedAsset.connectionsAsFrom[connectionId]
-            ? connection.toSocket
-            : connection.fromSocket
+        const nextSocketName = stagedAsset.connectionsAsFrom[connectionId]
+          ? connection.toSocket
+          : connection.fromSocket
 
-          if (subProject.stagedAssets[nextStagedAssetId]) {
-            trace(`Following connection ${connectionId} with category ${categoryId} to staged asset ${nextStagedAssetId} socket ${nextSocketName}`)
-            const child = generateGraph(
-              subProject,
-              startingId,
-              endId,
-              connectionCategoryId,
-              visited,
-              nextStagedAssetId,
-              connectionId,
-              nextSocketName
-            )
-            if (child) {
-              node.children.push(child)
-            }
+        if (subProject.stagedAssets[nextStagedAssetId]) {
+          trace(`Following connection ${connectionId} with category ${categoryId} to staged asset ${nextStagedAssetId} socket ${nextSocketName}`)
+          const child = generateGraph(
+            subProject,
+            startingId,
+            endId,
+            connectionCategoryId,
+            visited,
+            nextStagedAssetId,
+            connectionId,
+            nextSocketName
+          )
+          if (child) {
+            node.children.push(child)
           }
-        } else {
-          trace(`Ignoring connection ${connectionId} as connection socket ${internalToSocketName} is ${internalToSocketLabel} but we're coming from ${internalFromSocketLabel}`)
         }
       } else {
-        trace(`Ignoring connection ${connectionId} as category does not match`)
+        trace(`Ignoring connection ${connectionId} as connection socket ${internalToSocketName} is ${internalToSocketLabel} but we're coming from ${internalFromSocketLabel}`)
       }
+    } else {
+      trace(`Ignoring connection ${connectionId} as category does not match`)
     }
   })
 

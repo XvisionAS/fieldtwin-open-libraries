@@ -164,7 +164,13 @@ describe('graph-resolver', function () {
       const categoryId = 264
       const paths = findPaths(subProjectParallel, xmt, undefined, categoryId)
 
-      // In < v1.1 these paths followed Oil Production #7 back down again
+      // TODO should get 4
+      // 12 --> FPSO
+      // 8 --> FPSO
+      // 8 loop back to 12
+      // 12 loop back to 8
+
+      // TODO In < v1.1 these paths followed Oil Production #7 back down again
       assert.fail('add me')
     })
   })

@@ -11,6 +11,8 @@ const suites = [
   { apiVersion: '1.10', subProject: subProject110 }
 ]
 
+// TODO unskip tests, disable trace, test removing the visited[][] objects
+
 describe('graph-resolver', function () {
   describe('#findPaths() basic', function () {
     for (const suite of suites) {
@@ -172,15 +174,23 @@ describe('graph-resolver', function () {
       const xmt = '-OAJ4b2uHCCr-MX3dD3x'
       const categoryId = 264
       const paths = findPaths(subProjectParallel, xmt, undefined, categoryId)
-
-      // TODO should get 4
-      // 12 --> FPSO
-      // 8 --> FPSO
-      // 8 loop back to 12
-      // 12 loop back to 8
-
-      // TODO In < v1.1 these paths followed Oil Production #7 back down to the XMT again
-      assert.fail('add me')
+      const pathNames = paths.map((path) => path.map((obj) => obj.name))
+      // In < v1.1 the paths marked [*] followed Oil Production #7 UP from the XMT
+      // and also back DOWN to the XMT again. It also returned 7 paths as ending at
+      // the XMT triggered 2 extra path variants that appended the well.
+      assert.equal(paths.length, 5)
+      assert.deepStrictEqual(pathNames, [
+        //     XMT to well
+        ['XMT deep water #2', 'Volve F_F-10_F-10_F-10_ACTUAL'],
+        //     XMT to OP8, OP9 to FPSO (bottom path)
+        ['XMT deep water #2', 'Oil Production #7', 'Manifold #3', 'Oil Production #8', 'Inline-T #2', 'Oil Production #9', 'PLEM #2', 'Oil Production #10', 'Riser Base #2', 'Oil Production #11', 'Generic FPSO (Turret) #2'],
+        // [*] XMT to OP8, OP9 and loop back OP13, OP12 back to Manifold 3 (loop anti-clockwise)
+        ['XMT deep water #2', 'Oil Production #7', 'Manifold #3', 'Oil Production #8', 'Inline-T #2', 'Oil Production #9', 'PLEM #2', 'Oil Production #13', 'Inline-T #3', 'Oil Production #12', 'Manifold #3'],
+        //     XMT to OP12, OP13 to FPSO (top path)
+        ['XMT deep water #2', 'Oil Production #7', 'Manifold #3', 'Oil Production #12', 'Inline-T #3', 'Oil Production #13', 'PLEM #2', 'Oil Production #10', 'Riser Base #2', 'Oil Production #11', 'Generic FPSO (Turret) #2'],
+        // [*] XMT to OP12, OP13 and loop back OP9, OP8 back to Manifold 3 (loop clockwise)
+        ['XMT deep water #2', 'Oil Production #7', 'Manifold #3', 'Oil Production #12', 'Inline-T #3', 'Oil Production #13', 'PLEM #2', 'Oil Production #9', 'Inline-T #2', 'Oil Production #8', 'Manifold #3'],
+      ])
     })
   })
 })

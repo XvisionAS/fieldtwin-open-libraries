@@ -144,7 +144,7 @@ export const generateGraph = (
   const internalFromSocket = sockets2d[currentSocketName]
   const internalFromSocketName = internalFromSocket?.name || NO_SOCKET
   const internalFromSocketLabel = internalFromSocket?.label || ''
-  trace(`Arrived at staged asset ${stagedAsset.name} on socket name: ${JSON.stringify(internalFromSocketName)}`)
+  trace(`Arrived at staged asset ${stagedAsset.name} on socket name: ${internalFromSocketName}`)
 
   // The node object to return (if ok)
   const node = {
@@ -180,23 +180,27 @@ export const generateGraph = (
   // paths to continue along the common part (if they got there via different routes)
   // while still preventing infinite loops.
   const socketLabel = internalFromSocketLabel || internalFromSocketName
+  const currentNodeKey = `${stagedAssetId}:${socketLabel}`
+  // Init path trackers
   visited.pathHistory ||= new Set()
   visited[stagedAssetId] ||= {}
   visited[stagedAssetId][socketLabel] ||= new Set()
-  // Create a string path representation that includes the current node
-  const currentPathKey = `${stagedAssetId}:${socketLabel}`
-  const pathHistoryKey = Array.from(visited.pathHistory).concat([currentPathKey]).join(',')
-  // If we've already visited this node from the same path, stop
-  if (visited[stagedAssetId][socketLabel].has(pathHistoryKey)) {
+  // If we've already visited this node from the same branch traversal, stop
+  if (visited.pathHistory.has(currentNodeKey)) {
+    trace(`Stop: detected cycle back to node:socket ${currentNodeKey}`)
+    return
+  }
+  const pathSignature = Array.from(visited.pathHistory).concat([currentNodeKey]).join(',')
+  if (visited[stagedAssetId][socketLabel].has(pathSignature)) {
     trace(`Stop: arrived at node:socket ${stagedAssetId}:${socketLabel} via previously taken path`)
     return
   }
   // Mark the path that was used to get to this node
-  visited[stagedAssetId][socketLabel].add(pathHistoryKey)
+  visited[stagedAssetId][socketLabel].add(pathSignature)
   trace(`Marking as visited node:socket ${stagedAssetId}:${socketLabel}`)
   // Clone and update the path history set for this branch of recursion
   const nextPathHistory = new Set(visited.pathHistory)
-  nextPathHistory.add(currentPathKey)
+  nextPathHistory.add(currentNodeKey)
   // Use the branch-specific path history for the next recursion
   const nextVisited = {
     ...visited,
@@ -236,7 +240,7 @@ export const generateGraph = (
         : connection.toSocket
       const internalToSocket = sockets2d[internalToSocketName]
       const internalToSocketLabel = internalToSocket?.label || ''
-      trace(`Looking to follow connection ${connectionId} from asset socket: ${JSON.stringify(internalToSocketName)}`)
+      trace(`Looking to follow connection ${connectionId} from asset socket: ${internalToSocketName}`)
 
       // Here we make sure that the socket entering the staged asset and the socket leaving it
       // use the same socket label. This gives the user the possibility to define a route through

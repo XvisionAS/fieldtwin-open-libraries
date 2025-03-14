@@ -170,7 +170,7 @@ describe('graph-resolver', function () {
       // 8 loop back to 12
       // 12 loop back to 8
 
-      // TODO In < v1.1 these paths followed Oil Production #7 back down again
+      // TODO In < v1.1 these paths followed Oil Production #7 back down to the XMT again
       assert.fail('add me')
     })
   })

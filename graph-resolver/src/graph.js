@@ -90,7 +90,7 @@ export const generateGraph = (
   let wellId
   const initialRecursion = !stagedAssetId
 
-  if (initialRecursion) {
+  if (!stagedAssetId) {
     trace(`generateGraph(): Start`)
     // Special case - if the starting ID is a well, find the parent asset and
     // start from there. If no parent asset is found, return an empty graph.
@@ -134,7 +134,7 @@ export const generateGraph = (
   }
   const internalFromSocket = sockets2d[currentSocketName]
   const internalFromSocketLabel = internalFromSocket?.label ?? ''
-  const internalFromSocketName = internalFromSocket?.name
+  const internalFromSocketName = internalFromSocket?.name || '_undefined_socket'
   trace(`Arrived at staged asset ${stagedAsset.name} on socket name: ${JSON.stringify(internalFromSocketName)}`)
 
   // The node object to return (if ok)
@@ -164,8 +164,9 @@ export const generateGraph = (
   }
 
   // Check if we already visited this node, mark this asset + socket as visited
-  // so that we are sure to not start an infinite loop
-  const socketLabel = internalFromSocketLabel || internalFromSocketName || '_unknown_socket'
+  // so that we are sure to not start an infinite loop. This only marks the arrival
+  // socket, not the departure socket.
+  const socketLabel = internalFromSocketLabel || internalFromSocketName
   visited[stagedAssetId] ||= {}
   if (visited[stagedAssetId][socketLabel]) {
     trace(`Stop: arrived at previously visited socket ${stagedAssetId}:${socketLabel}`)
@@ -209,16 +210,15 @@ export const generateGraph = (
       const internalToSocketLabel = internalToSocket?.label ?? ''
       trace(`Looking to follow connection ${connectionId} from asset socket: ${JSON.stringify(internalToSocketName)}`)
 
-      // Next staged asset is connected to the other end of the connection
-
-      // Here we make sure that the sockets 'connecting' the two connections (one that arrive to the staged asset, and the one that go from it)
-      // use the same socket label. This gives the user the possibility to give a route even if multiple connections follow the same path
-      // if `currentConnectionId` is undefined, this is the initial recursion, so we do not care about label.
+      // Here we make sure that the socket entering the staged asset and the socket leaving it
+      // use the same socket label. This gives the user the possibility to define a route through
+      // the staged asset even if multiple connections of the same type enter and leave it.
+      // If `currentConnectionId` is undefined this is the initial recursion so the label is n/a.
       if (!currentConnectionId || internalToSocketLabel === internalFromSocketLabel) {
+        // Next staged asset is connected to the other end of the connection
         const nextStagedAssetId = stagedAsset.connectionsAsFrom[connectionId]
           ? connection.to
           : connection.from
-
         const nextSocketName = stagedAsset.connectionsAsFrom[connectionId]
           ? connection.toSocket
           : connection.fromSocket
@@ -240,7 +240,7 @@ export const generateGraph = (
           }
         }
       } else {
-        trace(`Ignoring connection ${connectionId} as connection socket ${internalToSocketName} is ${internalToSocketLabel} but we're coming from ${internalFromSocketLabel}`)
+        trace(`Ignoring connection ${connectionId} as connection socket ${internalToSocketName} is labelled ${internalToSocketLabel} but we're coming from ${internalFromSocketLabel}`)
       }
     } else {
       trace(`Ignoring connection ${connectionId} as category does not match`)

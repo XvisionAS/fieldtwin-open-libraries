@@ -161,9 +161,9 @@ export const generateGraph = (
   }
 
   if (!initialRecursion && startingId === stagedAssetId) {
-    // End of path, we are back at the origin
+    // End of path, we are back at the origin, do not close the loop
     trace(`Stop: arrived back at the starting point`)
-    return node
+    return
   }
 
   if (endId && endId == stagedAssetId) {

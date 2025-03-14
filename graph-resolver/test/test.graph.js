@@ -55,8 +55,7 @@ describe('graph-resolver', function () {
           const paths = findPaths(subProject, ids.well1)
           const pathNames = paths.map((path) => path.map((obj) => obj.name))
           assert.deepStrictEqual(pathNames, [
-            ['Well #1', 'Template 2 slot #1', 'Oil Production #3', 'Manifold #1', 'Oil Production #1', 'Manifold #2', 'Oil Production #2', 'Template 2 slot #1', 'Well #2'],
-            ['Well #1', 'Template 2 slot #1', 'Oil Production #3', 'Manifold #1', 'Oil Production #1', 'Manifold #2', 'Oil Production #2', 'Template 2 slot #1'],
+            ['Well #1', 'Template 2 slot #1', 'Oil Production #3', 'Manifold #1', 'Oil Production #1', 'Manifold #2'],
             ['Well #1', 'Template 2 slot #1', 'Oil Production #3', 'Manifold #1', 'Oil Production #4', 'Manifold #3'],
           ])
         })

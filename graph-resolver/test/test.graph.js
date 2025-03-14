@@ -40,6 +40,15 @@ describe('graph-resolver', function () {
           ])
         })
 
+        it('should generate the expected graph for the example in the README', function () {
+          const paths = findPaths(subProject, ids.manifold3, ids.template)
+          const pathNames = paths.map((path) => path.map((obj) => obj.name))
+          assert.deepStrictEqual(pathNames, [
+            ['Manifold #3', 'Oil Production #4', 'Manifold #1', 'Oil Production #3', 'Template 2 slot #1'],
+            ['Manifold #3', 'Oil Production #4', 'Manifold #1', 'Oil Production #1', 'Manifold #2', 'Oil Production #2', 'Template 2 slot #1'],
+          ])
+        })
+
         it('should follow paths starting from a well', function () {
           const paths = findPaths(subProject, ids.well1)
           const pathNames = paths.map((path) => path.map((obj) => obj.name))

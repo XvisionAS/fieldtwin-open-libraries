@@ -20,33 +20,33 @@ describe('graph-resolver', function () {
       describe(`data from API v${apiVersion}`, function () {
         it('should generate the expected graph without a connection filter', function () {
           const paths = findPaths(subProject, ids.manifold2)
-          const pathIds = paths.map((path) => path.map((obj) => obj.id))
-          assert.deepStrictEqual(pathIds, [
-            [ids.manifold2, ids.oilprod2, ids.template, ids.well2],
-            [ids.manifold2, ids.oilprod2, ids.template],
-            [ids.manifold2, ids.umbilical1, ids.gensuc],
-            [ids.manifold2, ids.oilprod1, ids.manifold1, ids.oilprod3, ids.template, ids.well1],
-            [ids.manifold2, ids.oilprod1, ids.manifold1, ids.oilprod3, ids.template],
-            [ids.manifold2, ids.oilprod1, ids.manifold1, ids.oilprod4, ids.manifold3],
+          const pathNames = paths.map((path) => path.map((obj) => obj.name))
+          assert.deepStrictEqual(pathNames, [
+            ['Manifold #2', 'Oil Production #2', 'Template 2 slot #1', 'Well #2'],
+            ['Manifold #2', 'Oil Production #2', 'Template 2 slot #1'],
+            ['Manifold #2', 'Umbilical #1', 'Generic Suction Anchor #1'],
+            ['Manifold #2', 'Oil Production #1', 'Manifold #1', 'Oil Production #3', 'Template 2 slot #1', 'Well #1'],
+            ['Manifold #2', 'Oil Production #1', 'Manifold #1', 'Oil Production #3', 'Template 2 slot #1'],
+            ['Manifold #2', 'Oil Production #1', 'Manifold #1', 'Oil Production #4', 'Manifold #3'],
           ])
         })
 
         it('should generate the expected graph with a connection filter', function () {
           const umbilicalId = '1'
           const paths = findPaths(subProject, ids.manifold2, undefined, umbilicalId)
-          const pathIds = paths.map((path) => path.map((obj) => obj.id))
-          assert.deepStrictEqual(pathIds, [
-            [ids.manifold2, ids.umbilical1, ids.gensuc],
+          const pathNames = paths.map((path) => path.map((obj) => obj.name))
+          assert.deepStrictEqual(pathNames, [
+            ['Manifold #2', 'Umbilical #1', 'Generic Suction Anchor #1'],
           ])
         })
 
         it('should follow paths starting from a well', function () {
           const paths = findPaths(subProject, ids.well1)
-          const pathIds = paths.map((path) => path.map((obj) => obj.id))
-          assert.deepStrictEqual(pathIds, [
-            [ids.well1, ids.template, ids.oilprod3, ids.manifold1, ids.oilprod1, ids.manifold2, ids.oilprod2, ids.template, ids.well2],
-            [ids.well1, ids.template, ids.oilprod3, ids.manifold1, ids.oilprod1, ids.manifold2, ids.oilprod2, ids.template],
-            [ids.well1, ids.template, ids.oilprod3, ids.manifold1, ids.oilprod4, ids.manifold3],
+          const pathNames = paths.map((path) => path.map((obj) => obj.name))
+          assert.deepStrictEqual(pathNames, [
+            ['Well #1', 'Template 2 slot #1', 'Oil Production #3', 'Manifold #1', 'Oil Production #1', 'Manifold #2', 'Oil Production #2', 'Template 2 slot #1', 'Well #2'],
+            ['Well #1', 'Template 2 slot #1', 'Oil Production #3', 'Manifold #1', 'Oil Production #1', 'Manifold #2', 'Oil Production #2', 'Template 2 slot #1'],
+            ['Well #1', 'Template 2 slot #1', 'Oil Production #3', 'Manifold #1', 'Oil Production #4', 'Manifold #3'],
           ])
         })
 
@@ -124,10 +124,10 @@ describe('graph-resolver', function () {
 
         it('should generate the expected graph without a connection filter with endpoint', function () {
           const paths = findPaths(subProject, ids.manifold2, ids.template)
-          const pathIds = paths.map((path) => path.map((obj) => obj.id))
-          assert.deepStrictEqual(pathIds, [
-            [ids.manifold2, ids.oilprod2, ids.template],
-            [ids.manifold2, ids.oilprod1, ids.manifold1, ids.oilprod3, ids.template]
+          const pathNames = paths.map((path) => path.map((obj) => obj.name))
+          assert.deepStrictEqual(pathNames, [
+            ['Manifold #2', 'Oil Production #2', 'Template 2 slot #1'],
+            ['Manifold #2', 'Oil Production #1', 'Manifold #1', 'Oil Production #3', 'Template 2 slot #1']
           ])
         })
       })

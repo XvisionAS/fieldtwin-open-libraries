@@ -49,7 +49,7 @@ describe('graph-resolver', function () {
           ])
         })
 
-        it('should follow paths starting from a well', function () {
+        it('should follow paths starting from a well, only via the well\'s defined socket', function () {
           const paths = findPaths(subProject, ids.well1)
           const pathNames = paths.map((path) => path.map((obj) => obj.name))
           assert.deepStrictEqual(pathNames, [

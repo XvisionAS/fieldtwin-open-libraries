@@ -5,8 +5,10 @@
 13 March 2025
 
 * Fix issue where the same connection could be followed in both directions in one path
-* Fix issue with parallel paths not being followed (because a non-parallel part of
-  the path was already travelled)
+* Fix issue with 2 parallel paths not both being followed when they rejoin to share
+  a common subsequent path
+* Fix issue where a path starting with a well might follow connections on other sockets
+  than the socket specifically attached to that well
 
 ## 1.0.0 - 1.0.1
 

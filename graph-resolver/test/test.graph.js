@@ -11,8 +11,6 @@ const suites = [
   { apiVersion: '1.10', subProject: subProject110 }
 ]
 
-// TODO unskip tests, disable trace, test removing the visited[][] objects
-
 describe('graph-resolver', function () {
   describe('#findPaths() basic', function () {
     for (const suite of suites) {
@@ -145,7 +143,7 @@ describe('graph-resolver', function () {
   })
 
   describe('#findPaths() parallel', function () {
-    it('should find 2 paths between the XMT and the FPSO v1.1.0', function () {
+    it('should find 2 paths between the XMT and the FPSO v1.1', function () {
       const xmt = '-OAJ4b2uHCCr-MX3dD3x'
       const fpso = '-OAJ4b2vuqJqqFfz_7RK'
       const categoryId = 264
@@ -169,14 +167,14 @@ describe('graph-resolver', function () {
       ])
     })
 
-    it('should not travel the same connection in both directions v1.1.0', function () {
+    it('should not travel the same connection in both directions v1.1', function () {
       const xmt = '-OAJ4b2uHCCr-MX3dD3x'
       const categoryId = 264
       const paths = findPaths(subProjectParallel, xmt, undefined, categoryId)
       const pathNames = paths.map((path) => path.map((obj) => obj.name))
-      // In < v1.1 the paths marked [*] followed Oil Production #7 UP from the XMT
-      // and also back DOWN to the XMT again. It also returned 7 paths as ending at
-      // the XMT triggered 2 extra path variants that appended the well.
+      // In v1.0 the paths marked [*] followed Oil Production #7 UP from the XMT
+      // and also back DOWN to the XMT again. It also returned 7 paths since ending
+      // at the XMT triggered 2 extra path variants that appended the well.
       assert.equal(paths.length, 5)
       assert.deepStrictEqual(pathNames, [
         //     XMT to well

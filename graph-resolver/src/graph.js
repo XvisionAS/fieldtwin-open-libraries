@@ -61,7 +61,7 @@ const getAssetIdForWell = (subProject, wellId) => {
   return undefined
 }
 
-const TRACE = true
+const TRACE = false
 const trace = (msg) => TRACE ? console.log(msg) : undefined
 const NO_SOCKET = '_undefined_socket'
 
@@ -77,8 +77,7 @@ const NO_SOCKET = '_undefined_socket'
  * @param {string} startingId the id of the asset or well to start walking from
  * @param {string} [endId] the id of the asset or well to end
  * @param {string|number} [connectionCategoryId] if defined, will only traverse connection with category equal to this value
- * @param {Object} [visited] is an object[stagedAssetId][socketLabel] of already visited stagedAssets
- *                           used to avoid infinite recursion while traversing the graph
+ * @param {Set} [visited] is a set of already visited stagedAssets used to avoid infinite recursion while traversing the graph
  * @param {string} [stagedAssetId] the id of the asset to walk from next (undefined for the first call)
  * @param {string} [currentConnectionId] is the connection that initiated this call (undefined for the first call)
  * @param {string} [currentSocketName] is the socket the connection arrived at on `stagedAssetId` (undefined for the first call)
@@ -89,7 +88,7 @@ export const generateGraph = (
   startingId,
   endId = '',
   connectionCategoryId,
-  visited = {},
+  visited,
   stagedAssetId,
   currentConnectionId,
   currentSocketName
@@ -173,39 +172,21 @@ export const generateGraph = (
   }
 
   // Check if we already visited this node, mark this asset + arrival socket as
-  // visited so that we are sure to not start an infinite loop. This originally
-  // used a boolean but this prevented parallel paths from being completed since
-  // the common part of the path could only be walked once. After a long discussion
-  // with Claude 3.7 we now create a recursion-specific path history to allow parallel
-  // paths to continue along the common part (if they got there via different routes)
-  // while still preventing infinite loops.
+  // visited so that we are sure to not start an infinite loop. This requires a
+  // recursion-specific path history to allow parallel paths to continue along a
+  // common part (if they got there via different routes).
   const socketLabel = internalFromSocketLabel || internalFromSocketName
   const currentNodeKey = `${stagedAssetId}:${socketLabel}`
-  // Init path trackers
-  visited.pathHistory ||= new Set()
-  visited[stagedAssetId] ||= {}
-  visited[stagedAssetId][socketLabel] ||= new Set()
   // If we've already visited this node from the same branch traversal, stop
-  if (visited.pathHistory.has(currentNodeKey)) {
+  visited ||= new Set()
+  if (visited.has(currentNodeKey)) {
     trace(`Stop: detected cycle back to node:socket ${currentNodeKey}`)
     return
   }
-  const pathSignature = Array.from(visited.pathHistory).concat([currentNodeKey]).join(',')
-  if (visited[stagedAssetId][socketLabel].has(pathSignature)) {
-    trace(`Stop: arrived at node:socket ${stagedAssetId}:${socketLabel} via previously taken path`)
-    return
-  }
-  // Mark the path that was used to get to this node
-  visited[stagedAssetId][socketLabel].add(pathSignature)
+  // Update and clone the path history set for this branch of recursion
   trace(`Marking as visited node:socket ${stagedAssetId}:${socketLabel}`)
-  // Clone and update the path history set for this branch of recursion
-  const nextPathHistory = new Set(visited.pathHistory)
-  nextPathHistory.add(currentNodeKey)
-  // Use the branch-specific path history for the next recursion
-  const nextVisited = {
-    ...visited,
-    pathHistory: nextPathHistory
-  }
+  visited.add(currentNodeKey)
+  const nextVisited = new Set(visited)
 
   const connectionsAsFrom = stagedAsset.connectionsAsFrom || {}
   const connectionsAsTo = stagedAsset.connectionsAsTo || {}

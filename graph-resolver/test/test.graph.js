@@ -4,6 +4,7 @@ import { describe, it } from 'node:test'
 import { findPaths } from '../src/index.js'
 import { ids, subProject as subProject109  } from './fixtures/v1.9/-MWZBqfmyxgQ46p_dlg1.js'
 import { subProject as subProject110 } from './fixtures/v1.10/-MWZBqfmyxgQ46p_dlg1.js'
+import { subProject as subProjectParallel } from './fixtures/v1.10/-MW4y5RpTyQ-m9FywBcW.js'
 
 const suites = [
   { apiVersion: '1.9', subProject: subProject109 },
@@ -11,7 +12,7 @@ const suites = [
 ]
 
 describe('graph-resolver', function () {
-  describe('#findPaths()', function () {
+  describe('#findPaths() basic', function () {
     for (const suite of suites) {
       const apiVersion = suite.apiVersion
       const subProject = suite.subProject
@@ -19,33 +20,41 @@ describe('graph-resolver', function () {
       describe(`data from API v${apiVersion}`, function () {
         it('should generate the expected graph without a connection filter', function () {
           const paths = findPaths(subProject, ids.manifold2)
-          const pathIds = paths.map((path) => path.map((obj) => obj.id))
-          assert.deepStrictEqual(pathIds, [
-            [ids.manifold2, ids.oilprod2, ids.template, ids.well2],
-            [ids.manifold2, ids.oilprod2, ids.template],
-            [ids.manifold2, ids.umbilical1, ids.gensuc],
-            [ids.manifold2, ids.oilprod1, ids.manifold1, ids.oilprod3, ids.template, ids.well1],
-            [ids.manifold2, ids.oilprod1, ids.manifold1, ids.oilprod3, ids.template],
-            [ids.manifold2, ids.oilprod1, ids.manifold1, ids.oilprod4, ids.manifold3],
+          const pathNames = paths.map((path) => path.map((obj) => obj.name))
+          assert.deepStrictEqual(pathNames, [
+            ['Manifold #2', 'Oil Production #2', 'Template 2 slot #1', 'Well #2'],
+            ['Manifold #2', 'Oil Production #2', 'Template 2 slot #1'],
+            ['Manifold #2', 'Umbilical #1', 'Generic Suction Anchor #1'],
+            ['Manifold #2', 'Oil Production #1', 'Manifold #1', 'Oil Production #3', 'Template 2 slot #1', 'Well #1'],
+            ['Manifold #2', 'Oil Production #1', 'Manifold #1', 'Oil Production #3', 'Template 2 slot #1'],
+            ['Manifold #2', 'Oil Production #1', 'Manifold #1', 'Oil Production #4', 'Manifold #3'],
           ])
         })
 
         it('should generate the expected graph with a connection filter', function () {
           const umbilicalId = '1'
           const paths = findPaths(subProject, ids.manifold2, undefined, umbilicalId)
-          const pathIds = paths.map((path) => path.map((obj) => obj.id))
-          assert.deepStrictEqual(pathIds, [
-            [ids.manifold2, ids.umbilical1, ids.gensuc],
+          const pathNames = paths.map((path) => path.map((obj) => obj.name))
+          assert.deepStrictEqual(pathNames, [
+            ['Manifold #2', 'Umbilical #1', 'Generic Suction Anchor #1'],
           ])
         })
 
-        it('should follow paths starting from a well', function () {
+        it('should generate the expected graph for the example in the README', function () {
+          const paths = findPaths(subProject, ids.manifold3, ids.template)
+          const pathNames = paths.map((path) => path.map((obj) => obj.name))
+          assert.deepStrictEqual(pathNames, [
+            ['Manifold #3', 'Oil Production #4', 'Manifold #1', 'Oil Production #3', 'Template 2 slot #1'],
+            ['Manifold #3', 'Oil Production #4', 'Manifold #1', 'Oil Production #1', 'Manifold #2', 'Oil Production #2', 'Template 2 slot #1'],
+          ])
+        })
+
+        it('should follow paths starting from a well, only via the well\'s defined socket', function () {
           const paths = findPaths(subProject, ids.well1)
-          const pathIds = paths.map((path) => path.map((obj) => obj.id))
-          assert.deepStrictEqual(pathIds, [
-            [ids.well1, ids.template, ids.oilprod3, ids.manifold1, ids.oilprod1, ids.manifold2, ids.oilprod2, ids.template, ids.well2],
-            [ids.well1, ids.template, ids.oilprod3, ids.manifold1, ids.oilprod1, ids.manifold2, ids.oilprod2, ids.template],
-            [ids.well1, ids.template, ids.oilprod3, ids.manifold1, ids.oilprod4, ids.manifold3],
+          const pathNames = paths.map((path) => path.map((obj) => obj.name))
+          assert.deepStrictEqual(pathNames, [
+            ['Well #1', 'Template 2 slot #1', 'Oil Production #3', 'Manifold #1', 'Oil Production #1', 'Manifold #2'],
+            ['Well #1', 'Template 2 slot #1', 'Oil Production #3', 'Manifold #1', 'Oil Production #4', 'Manifold #3'],
           ])
         })
 
@@ -123,13 +132,62 @@ describe('graph-resolver', function () {
 
         it('should generate the expected graph without a connection filter with endpoint', function () {
           const paths = findPaths(subProject, ids.manifold2, ids.template)
-          const pathIds = paths.map((path) => path.map((obj) => obj.id))
-          assert.deepStrictEqual(pathIds, [
-            [ids.manifold2, ids.oilprod2, ids.template],
-            [ids.manifold2, ids.oilprod1, ids.manifold1, ids.oilprod3, ids.template]
+          const pathNames = paths.map((path) => path.map((obj) => obj.name))
+          assert.deepStrictEqual(pathNames, [
+            ['Manifold #2', 'Oil Production #2', 'Template 2 slot #1'],
+            ['Manifold #2', 'Oil Production #1', 'Manifold #1', 'Oil Production #3', 'Template 2 slot #1']
           ])
         })
       })
     }
+  })
+
+  describe('#findPaths() parallel', function () {
+    it('should find 2 paths between the XMT and the FPSO v1.1', function () {
+      const xmt = '-OAJ4b2uHCCr-MX3dD3x'
+      const fpso = '-OAJ4b2vuqJqqFfz_7RK'
+      const categoryId = 264
+      const paths = findPaths(subProjectParallel, xmt, fpso, categoryId)
+      assert.deepStrictEqual(paths.length, 2)
+      // Expect 1 path via Oil Production #8
+      const path1 = paths[0]
+      const path1Names = path1.map((obj) => obj.name)
+      assert.deepStrictEqual(path1Names, [
+        'XMT deep water #2', 'Oil Production #7', 'Manifold #3', 'Oil Production #8', 'Inline-T #2',
+        'Oil Production #9', 'PLEM #2', 'Oil Production #10', 'Riser Base #2', 'Oil Production #11',
+        'Generic FPSO (Turret) #2'
+      ])
+      // Expect 1 path via Oil Production #12
+      const path2 = paths[1]
+      const path2Names = path2.map((obj) => obj.name)
+      assert.deepStrictEqual(path2Names, [
+        'XMT deep water #2', 'Oil Production #7', 'Manifold #3', 'Oil Production #12', 'Inline-T #3',
+        'Oil Production #13', 'PLEM #2', 'Oil Production #10', 'Riser Base #2', 'Oil Production #11',
+        'Generic FPSO (Turret) #2'
+      ])
+    })
+
+    it('should not travel the same connection in both directions v1.1', function () {
+      const xmt = '-OAJ4b2uHCCr-MX3dD3x'
+      const categoryId = 264
+      const paths = findPaths(subProjectParallel, xmt, undefined, categoryId)
+      const pathNames = paths.map((path) => path.map((obj) => obj.name))
+      // In v1.0 the paths marked [*] followed Oil Production #7 UP from the XMT
+      // and also back DOWN to the XMT again. It also returned 7 paths since ending
+      // at the XMT triggered 2 extra path variants that appended the well.
+      assert.equal(paths.length, 5)
+      assert.deepStrictEqual(pathNames, [
+        //     XMT to well
+        ['XMT deep water #2', 'Volve F_F-10_F-10_F-10_ACTUAL'],
+        //     XMT to OP8, OP9 to FPSO (bottom path)
+        ['XMT deep water #2', 'Oil Production #7', 'Manifold #3', 'Oil Production #8', 'Inline-T #2', 'Oil Production #9', 'PLEM #2', 'Oil Production #10', 'Riser Base #2', 'Oil Production #11', 'Generic FPSO (Turret) #2'],
+        // [*] XMT to OP8, OP9 and loop back OP13, OP12 back to Manifold 3 (loop anti-clockwise)
+        ['XMT deep water #2', 'Oil Production #7', 'Manifold #3', 'Oil Production #8', 'Inline-T #2', 'Oil Production #9', 'PLEM #2', 'Oil Production #13', 'Inline-T #3', 'Oil Production #12', 'Manifold #3'],
+        //     XMT to OP12, OP13 to FPSO (top path)
+        ['XMT deep water #2', 'Oil Production #7', 'Manifold #3', 'Oil Production #12', 'Inline-T #3', 'Oil Production #13', 'PLEM #2', 'Oil Production #10', 'Riser Base #2', 'Oil Production #11', 'Generic FPSO (Turret) #2'],
+        // [*] XMT to OP12, OP13 and loop back OP9, OP8 back to Manifold 3 (loop clockwise)
+        ['XMT deep water #2', 'Oil Production #7', 'Manifold #3', 'Oil Production #12', 'Inline-T #3', 'Oil Production #13', 'PLEM #2', 'Oil Production #9', 'Inline-T #2', 'Oil Production #8', 'Manifold #3'],
+      ])
+    })
   })
 })

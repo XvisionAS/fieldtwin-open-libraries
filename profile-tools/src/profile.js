@@ -489,6 +489,8 @@ export class ProfileExporter {
         if (value !== undefined && value !== null) {
           attributes.push({
             metaDatumId: metadataValue.metaDatumId,
+            vendorId: metadataValue.vendorId,
+            definitionId: metadataValue.definitionId,
             name: metadataValue.name || '',
             value: value,
             unit: metadataValue.option || '',

@@ -1,5 +1,12 @@
 # Profile tools
 
+## 1.3.1
+
+8 July 2025
+
+* Add vendorId and definitionId to exported metadata to enable attribute
+  matching when metaDatumId is different coming from an external subProject
+
 ## 1.3.0
 
 11 December 2024

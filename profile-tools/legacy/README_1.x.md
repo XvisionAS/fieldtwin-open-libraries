@@ -8,9 +8,6 @@ This utility builds on [graph-resolver](../graph-resolver/) to:
 The primary use case for this is to integrate FieldTwin with flow assurance tools and simulators.
 It could also be used to export flow paths into another 3D viewer, geospatial or mapping system.
 
-The current version is v2.x. You can find the README for v1.x [here](./legacy/README_1.x.md).
-Major changes are described in the [CHANGELOG](./CHANGELOG.md).
-
 ## Compatibility
 
 FieldTwin API v1.10.
@@ -106,17 +103,13 @@ Example output:
       "name": "Oil Production #4",
       "attributes": [
         {
-          "definitionId": "FutureOnMetadata:Std.InnerDiameter[numerical.Length.Short Length]",
           "metaDatumId": "-N68U9EWYziLs9D84qXJ",
           "name": "Inner Diameter",
-          "vendorId": "Std.InnerDiameter",
           "value": 16,
           "unit": "in"
         },
         {
-          "definitionId": "FutureOnMetadata:Std.WallThickness[numerical.Length.Short Length]",
           "metaDatumId": "-N68U9EWYziLs9D84qXL",
-          "vendorId": "Std.WallThickness",
           "name": "Wall Thickness",
           "value": 27,
           "unit": "mm"
@@ -148,18 +141,14 @@ Example output:
       "name": "Oil Production #3",
       "attributes": [
         {
-          "definitionId": "FutureOnMetadata:Std.InnerDiameter[numerical.Length.Short Length]",
           "metaDatumId": "-N68U9EWYziLs9D84qXJ",
           "name": "Inner Diameter",
-          "vendorId": "Std.InnerDiameter",
           "value": 16,
           "unit": "in"
         },
         {
-          "definitionId": "FutureOnMetadata:Std.WallThickness[numerical.Length.Short Length]",
           "metaDatumId": "-N68U9EWYziLs9D84qXL",
           "name": "Wall Thickness",
-          "vendorId": "Std.WallThickness",
           "value": 27,
           "unit": "mm"
         }
@@ -193,39 +182,29 @@ Example output:
 The following attributes are supported in the `options` object.
 All attributes are optional.
 
-* `profileType` - How to export the profiles of imported connections
-  * `default` - As shown in FieldTwin
-    * Generates a sampled XYZ profile for all connection types,
-      with points spaced approximately at the `sampleWidth` interval
-    * XY values follow the path of the control points for designed connections,
-      or the imported XY points for imported connections
-    * Z values are determined by the connection's "connection follows bathymetry"
-      attribute (sampled from the bathymetry when `true`, taken from the imported points when `false`)
-  * `sampled` - This is now equivalent to `default`
-  * `raw` - Export the original XYZ points unchanged
-    * Ignores the "connection follows bathymetry" attribute and does not resample any points
-  * `keepSurvey` - Export as `raw` for survey data, otherwise `default`
-    * Survey data is identified by an imported connection having "connection follows bathymetry"
-      as `false` and the number of imported points being equal to or greater than `minimumSurveyPoints`
-* `sampleWidth` - The approximate interval of points to generate in the XYZ profile
-  * Default `1`, minimum `1` (provides a point every 1 foot/meter along each connection)
-* `minimumPoints` - The minimum number of points required in a generated XYZ profile
-  * Default `10`
-  * Overrides `sampleWidth` when the generated number of points is too low
-* `minimumSurveyPoints` - When `profileType` is `keepSurvey`, the minimum number of points
-  an imported connection must have before it can be considered to contain survey data
-  * Default `200`
-* `relativePoints` - Whether to export the first point of the first profile at X,Y 0,0
-  and provide all other points as offsets from it
-  * Default `false` (keep the XYZ locations as shown in FieldTwin, valid for the CRS of the project)
-  * The returned CRS is blank when `relativePoints` is `true`
-* `simplify` - Whether to apply the [Ramer–Douglas–Peucker algorithm](https://en.wikipedia.org/wiki/Ramer%E2%80%93Douglas%E2%80%93Peucker_algorithm)
+* `profileType` - how to handle imported connections
+  * `default` - as shown in FieldTwin
+    * export the original XYZ points when "connection follows bathymetry" is false
+    * export the original XY points and a height sampled Z when "connection follows bathymetry" is true
+  * `raw` - export the original XYZ points (ignoring "connection follows bathymetry")
+  * `sampled` - generate a sampled XYZ profile the same as for non-imported connections,
+    with points at the `sampleWidth` interval
+* `sampleWidth` - the interval of points in the XYZ profile generated for non-imported connections
+  * default `1`, minimum `1` (provides a point every 1 foot/meter along each connection)
+* `minimumPoints` - the minimum number of points required in a generated profile
+  * default `10`
+  * overrides `sampleWidth` when the generated number of points is too low
+* `relativePoints` - whether to start the first point of the first profile at XY 0,0 and provide
+   all other points as offsets from it
+  * default `false` (keep the XYZ locations as shown in FieldTwin, valid for the CRS of the project)
+  * the returned CRS is blank when `relativePoints` is `true`
+* `simplify` - whether to apply the [Ramer–Douglas–Peucker algorithm](https://en.wikipedia.org/wiki/Ramer%E2%80%93Douglas%E2%80%93Peucker_algorithm)
   to the exported profiles to remove points that fall in a straight line
-  * Default `false`
-* `simplifyTolerance` - When `simplify` is `true`, a sequence of points that varies in horizontal
-  or vertical distance by less than this value will be considered a straight line and removed
-  * Default `0.1`, minimum `0.01`
-  * Setting a larger tolerance removes more points
+  * default `false`
+* `simplifyTolerance` - when `simplify` is `true`, a sequence of points that varies in horizontal/vertical
+  distance by less than this value will be considered a straight line and removed
+  * default `0.1`, minimum `0.01`
+  * setting a larger tolerance removes more points
 
 ### Notes
 

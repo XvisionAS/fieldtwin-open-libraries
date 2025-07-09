@@ -237,6 +237,20 @@ export class ProfileExporter {
   }
 
   /**
+   * Returns true if a connection appears to hold detailed survey data.
+   * @param {object} conn connection
+   * @param {number} minPoints minimum number of points to consider the data set as a survey
+   * @returns {boolean}
+   */
+  connectionIsSurvey(conn, minPoints) {
+    return (
+      this.connectionIsImported(conn) &&
+      conn.noHeightSampling &&
+      (conn.intermediaryPoints || []).length >= minPoints
+    )
+  }
+
+  /**
    * Exports the 3D profiles and selected metadata values of connections and optionally a well bore
    * (expected to be first or last) in the provided path.
    * @param {Path} path an array of PathItem objects
@@ -256,6 +270,7 @@ export class ProfileExporter {
     options.sampleWidth ||= 1
     options.simplifyTolerance ||= 0.1
     options.minimumPoints ||= 10
+    options.minimumSurveyPoints ||= 200
 
     /** @type {Point|null} */
     let firstPoint = null
@@ -358,23 +373,31 @@ export class ProfileExporter {
       profile = conn.sampled
     }
 
-    // For imported connections use some form of the intermediate points
+    // Different profile options for imported connections
     if (this.connectionIsImported(conn)) {
       switch (options.profileType) {
+        case 'default':
         case 'sampled':
-          // Use the fully sampled XYZ profile we already have
+          // v2.0 Use the fully sampled XYZ profile we already have.
           // For imported connections 'sampled' is based on the imported points
+          // with Z from the imported points when connection.noHeightSampling is true
+          // or sampled from the bathymetry when connection.noHeightSampling is false.
           break
         case 'raw':
-          // Use the raw imported XYZ points, ignoring connection.noHeightSampling
+          // Use the raw original XYZ points, ignore connection.noHeightSampling
           conn = await loadConnectionRaw()
-          // Fall through to default!
-        case 'default':
-          // Use the imported XYZ points
-          // if !raw then intermediaryPoints.z is based on connection.noHeightSampling
           profile = [conn.fromCoordinate].concat(conn.intermediaryPoints).concat([conn.toCoordinate])
           if (options.simplify) {
             profile = this.simplifyPoints(profile, options.simplifyTolerance)
+          }
+          break
+        case 'keepSurvey':
+          // v2.0 Use the original XYZ points if survey data, otherwise use the default
+          if (this.connectionIsSurvey(conn, options.minimumSurveyPoints)) {
+            profile = [conn.fromCoordinate].concat(conn.intermediaryPoints).concat([conn.toCoordinate])
+            if (options.simplify) {
+              profile = this.simplifyPoints(profile, options.simplifyTolerance)
+            }
           }
           break
         default:

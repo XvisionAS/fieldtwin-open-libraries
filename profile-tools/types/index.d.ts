@@ -14,12 +14,13 @@ declare module "@xvisionas/profile-tools" {
     depthType: 'MD' | 'TVD';
   }
 
-  export type ProfileType = 'default' | 'raw' | 'sampled';
+  export type ProfileType = 'default' | 'raw' | 'sampled' | 'keepSurvey';
 
   export interface ProfileOptions {
     profileType?: ProfileType;
     sampleWidth?: number;
     minimumPoints?: number;
+    minimumSurveyPoints?: number;
     relativePoints?: boolean;
     simplify?: boolean;
     simplifyTolerance?: number;

@@ -28,20 +28,34 @@ describe('ProfileExporter [unit]', function () {
 
     it('should return attributes from well bore in preference to the well', function () {
       const well = structuredClone(mockWell)
-      well.activeWellBore.metaData = [{ metaDatumId: mdId, name: 'Roughness', value: 0.001, option: 'cm' }]
+      well.activeWellBore.metaData = [{ metaDatumId: mdId, vendorId: 'boreRoughness', name: 'Roughness', value: 0.001, option: 'cm' }]
       well.wellBores[0].metaData = well.activeWellBore.metaData
-      well.metaData = [{ metaDatumId: mdId, name: 'Roughness', value: 0.005, option: 'cm' }]
+      well.metaData = [{ metaDatumId: mdId, vendorId: 'wellRoughness', name: 'Roughness', value: 0.005, option: 'cm' }]
       const attrs = exporter.getWellAttributes(well, wantMetadata)
-      assert.deepStrictEqual(attrs, [{ metaDatumId: mdId, name: 'Roughness', value: 0.001, unit: 'cm' }])
+      assert.deepStrictEqual(attrs, [{
+        definitionId: undefined,
+        metaDatumId: mdId,
+        vendorId: 'boreRoughness',
+        name: 'Roughness',
+        value: 0.001,
+        unit: 'cm'
+      }])
     })
 
     it('should return attributes from well as a fallback', function () {
       const well = structuredClone(mockWell)
-      well.activeWellBore.metaData = [{ metaDatumId: 'unmapped', name: 'Roughness', value: 0.001, option: 'cm' }]
+      well.activeWellBore.metaData = [{ metaDatumId: 'unmapped', vendorId: 'unmapped', name: 'Roughness', value: 0.001, option: 'cm' }]
       well.wellBores[0].metaData = well.activeWellBore.metaData
-      well.metaData = [{ metaDatumId: mdId, name: 'Roughness', value: 0.005, option: 'cm' }]
+      well.metaData = [{ metaDatumId: mdId, vendorId: 'wellRoughness', name: 'Roughness', value: 0.005, option: 'cm' }]
       const attrs = exporter.getWellAttributes(well, wantMetadata)
-      assert.deepStrictEqual(attrs, [{ metaDatumId: mdId, name: 'Roughness', value: 0.005, unit: 'cm' }])
+      assert.deepStrictEqual(attrs, [{
+        definitionId: undefined,
+        metaDatumId: mdId,
+        vendorId: 'wellRoughness',
+        name: 'Roughness',
+        value: 0.005,
+        unit: 'cm'
+      }])
     })
 
     it('should return blank if no matching metadata', function () {
@@ -222,25 +236,33 @@ describe('ProfileExporter [unit]', function () {
         const result = exporter.buildObjectAttributes(connection, wantMetadata)
         assert.deepStrictEqual(result, [
           {
+            definitionId: undefined,
             metaDatumId: '-M19wn-KQoW7WZhT91rx',
+            vendorId: 'Acme.NetworkType',
             name: 'Network Type',
             value: 'Production network',
             unit: '',
           },
           {
+            definitionId: undefined,
             metaDatumId: '-M19xgnbsM5ID9WexfDN',
+            vendorId: 'Acme.Roughness',
             name: 'Roughness',
             value: 0.003,
             unit: 'cm',
           },
           {
+            definitionId: 'AcmePOC:Acme.WallThickness[numerical.Length.Short Length]',
             metaDatumId: '-MuKzFyd8piF3G8nCqjV',
+            vendorId: 'Acme.WallThickness',
             name: 'Wall Thickness',
             value: 2.5,
             unit: 'cm',
           },
           {
+            definitionId: 'AcmePOC:UValue[numerical.General.U Value]',
             metaDatumId: '-MuKzeFFKRRmmhY1Hig3',
+            vendorId: 'Acme.UValue',
             name: 'U-Value',
             value: 2.2,
             unit: 'W/m2/C',
@@ -282,13 +304,17 @@ describe('ProfileExporter [unit]', function () {
       const result = exporter.buildObjectAttributes(connection, wantMetadata)
       assert.deepStrictEqual(result, [
         {
+          definitionId: undefined,
           metaDatumId: '-M19wn-KQoW7WZhT91rx',
+          vendorId: 'Acme.NetworkType',
           name: 'Network Type',
           value: 'Production network',
           unit: '',
         },
         {
+          definitionId: 'AcmePOC:Acme.WallThickness[numerical.Length.Short Length]',
           metaDatumId: '-MuKzFyd8piF3G8nCqjV',
+          vendorId: 'Acme.WallThickness',
           name: 'Wall Thickness',
           value: 2.5,
           unit: 'cm',

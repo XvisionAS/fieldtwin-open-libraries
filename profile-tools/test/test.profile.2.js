@@ -275,25 +275,33 @@ describe('ProfileExporter [integration]', function () {
     assert.deepStrictEqual(profile.id, mockWellId)
     assert.deepStrictEqual(profile.attributes, [
       {
+        definitionId: undefined,
         metaDatumId: '-M19xXO5UH3nXaY44ykr',
+        vendorId: 'Acme.InsideDiameter',
         name: 'Inside Diameter',
         value: 30,
         unit: 'cm',
       },
       {
+        definitionId: undefined,
         metaDatumId: '-M19xgnbsM5ID9WexfDN',
+        vendorId: 'Acme.Roughness',
         name: 'Roughness',
         value: 0.002,
         unit: 'cm',
       },
       {
+        definitionId: 'AcmePOC:Acme.WallThickness[numerical.Length.Short Length]',
         metaDatumId: '-MuKzFyd8piF3G8nCqjV',
+        vendorId: 'Acme.WallThickness',
         name: 'Wall Thickness',
         value: 4.3,
         unit: 'cm',
       },
       {
+        definitionId: 'AcmePOC:UValue[numerical.General.U Value]',
         metaDatumId: '-MuKzeFFKRRmmhY1Hig3',
+        vendorId: 'Acme.UValue',
         name: 'U-Value',
         value: 3.2,
         unit: 'W/m2/C',
@@ -304,25 +312,33 @@ describe('ProfileExporter [integration]', function () {
     assert.deepStrictEqual(profile.id, mockConnIds[mockConnIds.length - 1])
     assert.deepStrictEqual(profile.attributes, [
       {
+        definitionId: undefined,
         metaDatumId: '-M19xXO5UH3nXaY44ykr',
+        vendorId: 'Acme.InsideDiameter',
         name: 'Inside Diameter',
         value: 28.7,
         unit: 'cm',
       },
       {
+        definitionId: undefined,
         metaDatumId: '-M19xgnbsM5ID9WexfDN',
+        vendorId: 'Acme.Roughness',
         name: 'Roughness',
         value: 0.003,
         unit: 'cm',
       },
       {
+        definitionId: 'AcmePOC:Acme.WallThickness[numerical.Length.Short Length]',
         metaDatumId: '-MuKzFyd8piF3G8nCqjV',
+        vendorId: 'Acme.WallThickness',
         name: 'Wall Thickness',
         value: 2.5,
         unit: 'cm',
       },
       {
+        definitionId: 'AcmePOC:UValue[numerical.General.U Value]',
         metaDatumId: '-MuKzeFFKRRmmhY1Hig3',
+        vendorId: 'Acme.UValue',
         name: 'U-Value',
         value: 2.2,
         unit: 'W/m2/C',

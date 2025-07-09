@@ -103,13 +103,17 @@ Example output:
       "name": "Oil Production #4",
       "attributes": [
         {
+          "definitionId": "FutureOnMetadata:Std.InnerDiameter[numerical.Length.Short Length]",
           "metaDatumId": "-N68U9EWYziLs9D84qXJ",
           "name": "Inner Diameter",
+          "vendorId": "Std.InnerDiameter",
           "value": 16,
           "unit": "in"
         },
         {
+          "definitionId": "FutureOnMetadata:Std.WallThickness[numerical.Length.Short Length]",
           "metaDatumId": "-N68U9EWYziLs9D84qXL",
+          "vendorId": "Std.WallThickness",
           "name": "Wall Thickness",
           "value": 27,
           "unit": "mm"
@@ -141,14 +145,18 @@ Example output:
       "name": "Oil Production #3",
       "attributes": [
         {
+          "definitionId": "FutureOnMetadata:Std.InnerDiameter[numerical.Length.Short Length]",
           "metaDatumId": "-N68U9EWYziLs9D84qXJ",
           "name": "Inner Diameter",
+          "vendorId": "Std.InnerDiameter",
           "value": 16,
           "unit": "in"
         },
         {
+          "definitionId": "FutureOnMetadata:Std.WallThickness[numerical.Length.Short Length]",
           "metaDatumId": "-N68U9EWYziLs9D84qXL",
           "name": "Wall Thickness",
+          "vendorId": "Std.WallThickness",
           "value": 27,
           "unit": "mm"
         }

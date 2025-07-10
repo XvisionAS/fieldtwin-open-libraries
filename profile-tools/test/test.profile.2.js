@@ -38,11 +38,13 @@ mockConnIds.forEach((id) => {
   const conn = JSON.parse(
     fs.readFileSync(path.join(__dirname, `fixtures/v1.9/${id}.json`), { encoding: 'utf-8' })
   )
+  conn.id = id
   mockConns.push(conn)
 })
 
 const mockProjectId = '-MYK-de5CLBSrP6xXC0G'
 const mockSubProjectId = '-MYK-de6thIV5gW4fCB-'
+const mockStreamId = '-MYK-de6thIV5gW4fCB-'
 const mockSeabedDepth = -1234
 const mockSurveyDepth = -1165
 
@@ -50,6 +52,11 @@ const mockSurveyDepth = -1165
 Object.freeze(mockPath)
 Object.freeze(mockWell)
 mockConns.forEach((c) => Object.freeze(c))
+
+// mockConns.forEach((c) => console.log(
+//   `Test connection ${c.id} type ${c.designType} has ${c.intermediaryPoints.length} ` +
+//   `intermediary points and ${c.sampled.length} sampled points`
+// ))
 
 describe('ProfileExporter [integration]', function () {
   const exporter = new ProfileExporter(TEST_BACKEND_URL)
@@ -104,6 +111,7 @@ describe('ProfileExporter [integration]', function () {
   // Utility to mock all the API calls required for exporting a flowpath
   function setupPathGetterMocks(options = {}) {
     const {
+      streamId,
       sampling,
       simplify,
       reverseConn1,
@@ -138,11 +146,12 @@ describe('ProfileExporter [integration]', function () {
     if (noHeightSamplingImportedConn !== undefined) {
       useImportedConn.noHeightSampling = noHeightSamplingImportedConn
       if (useImportedConn.noHeightSampling === false) {
-        // Emulate height sampling
-        useImportedConn.intermediaryPoints.forEach((point) => point.z = mockSeabedDepth)
+        // Emulate height sampling on both sets of points
+        useImportedConn.intermediaryPoints.forEach((point) => {
+          point.z = mockSeabedDepth
+        })
         useImportedConn.sampled.forEach((point, idx) => {
-          // FTAPI returns the from/to coordinates (with socket depth) as the first and last points
-          // in `sampled` so do not change these
+          // FTAPI returns the from/to coordinates (with socket depth) as the first and last points in `sampled` so don't change these
           if (idx !== 0 && idx !== useImportedConn.sampled.length - 1) {
             point.z = mockSeabedDepth
           }
@@ -164,6 +173,7 @@ describe('ProfileExporter [integration]', function () {
     }
 
     // Mock the API calls made when assembling the exported profiles
+    const fullSubprojectId = streamId ? `${mockSubProjectId}:${streamId}` : mockSubProjectId
 
     const loadHeadersInit = {
       'accept': 'application/json',
@@ -176,11 +186,11 @@ describe('ProfileExporter [integration]', function () {
       .reply(200, { id: mockProjectId, name: 'Test Project', CRS: 'EPSG:1234', coordinateUnits: 'm' })
     // Load wells referenced from the test path
     nock(FT_API_URL, { reqheaders: loadHeaders })
-      .get(`/${mockProjectId}/subProject/${mockSubProjectId}/well/${mockWellId}`)
+      .get(`/${mockProjectId}/subProject/${fullSubprojectId}/well/${mockWellId}`)
       .reply(200, useWell)
     // Load seabed depth for well
     nock(FT_API_URL, { reqheaders: loadHeaders })
-      .post(`/${mockProjectId}/subProject/${mockSubProjectId}/heightSamples`)
+      .post(`/${mockProjectId}/subProject/${fullSubprojectId}/heightSamples`)
       .reply(200, { depths: [mockWellDepth] })
     // Load sampled connections referenced from the test path
     // This part mocks profile.loadConnectionDefault()
@@ -191,7 +201,7 @@ describe('ProfileExporter [integration]', function () {
     }
     mockConnIds.forEach((id, idx) => {
       nock(FT_API_URL, { reqheaders: loadHeaders })
-        .get(`/${mockProjectId}/subProject/${mockSubProjectId}/connection/${id}`)
+        .get(`/${mockProjectId}/subProject/${fullSubprojectId}/connection/${id}`)
         .reply(200, useConns[idx])
     })
     // For profile type 'raw' we re-request the raw data for the imported connection
@@ -203,10 +213,19 @@ describe('ProfileExporter [integration]', function () {
       }
       useImportedConn.intermediaryPoints.forEach((point) => point.z = mockSurveyDepth)
       nock(FT_API_URL, { reqheaders: loadHeaders })
-        .get(`/${mockProjectId}/subProject/${mockSubProjectId}/connection/${importedConnectionId}`)
+        .get(`/${mockProjectId}/subProject/${fullSubprojectId}/connection/${importedConnectionId}`)
         .reply(200, useImportedConn)
     }
   }
+
+  it('should export default profiles with default options', async function () {
+    setupPathGetterMocks({ streamId: mockStreamId })
+    const data = await exporter.exportProfiles(
+      mockPath, [], {}, mockProjectId, mockSubProjectId, mockStreamId
+    )
+    const expectedJSON = fs.readFileSync(path.join(__dirname, 'expected/default.json'))
+    assert.deepStrictEqual(data, JSON.parse(expectedJSON.toString()))
+  })
 
   it('should export a path from 0,0 with relative XY points', async function () {
     setupPathGetterMocks()
@@ -445,7 +464,7 @@ describe('ProfileExporter [integration]', function () {
 
   it('should respect the sample width setting', async function () {
     // The test here is that the 77 is included in the nock headers
-    // so we are testing that the API is called with that sample-every value
+    // so we are testing that the API is called with that value in the sample-every header
     setupPathGetterMocks({ sampling: 77 })
     const data = await exporter.exportProfiles(
       mockPath, [], { sampleWidth: 77 }, mockProjectId, mockSubProjectId
@@ -453,7 +472,7 @@ describe('ProfileExporter [integration]', function () {
     assert.ok(data.profiles.length)
   })
 
-  it('should export intermediary points for imported connections by default INTE-649', async function () {
+  it('should export sampled points for imported connections for type default INTE-921', async function () {
     setupPathGetterMocks()
     const data = await exporter.exportProfiles(
       mockPath, [], { profileType: 'default' }, mockProjectId, mockSubProjectId
@@ -465,9 +484,96 @@ describe('ProfileExporter [integration]', function () {
 
     // We can just check the number of points as long as sampled.length != imported points length
     const importedPointsLen = importedConnection.intermediaryPoints.length + 2
-    assert.notEqual(importedConnection.sampled.length, importedPointsLen)
-    // The imported connection should export its fromCoordinate + intermediaryPoints + toCoordinate
+    const sampledPointsLen = importedConnection.sampled.length
+    assert.notEqual(sampledPointsLen, importedPointsLen)
+    // Check that the sampled points were used
+    assert.equal(imported.profile.length, sampledPointsLen)
+  })
+
+  it('should export sampled points for imported connections for type sampled INTE-649', async function () {
+    setupPathGetterMocks()
+    const data = await exporter.exportProfiles(
+      mockPath, [], { profileType: 'sampled' }, mockProjectId, mockSubProjectId
+    )
+
+    assert.ok(data.profiles.length)
+    const imported = data.profiles.find((p) => p.id === importedConnectionId)
+    assert.ok(imported)
+
+    // We can just check the number of points as long as sampled.length != imported points length
+    const importedPointsLen = importedConnection.intermediaryPoints.length + 2
+    const sampledPointsLen = importedConnection.sampled.length
+    assert.notEqual(sampledPointsLen, importedPointsLen)
+    // Check that the sampled points were used
+    assert.equal(imported.profile.length, sampledPointsLen)
+  })
+
+  it('should respect the noHeightSampling flag for imported connections for type default', async function () {
+    const tests = [
+      { noHeightSampling: true, expectHeightSampling: false }, // default for imported connections
+      { noHeightSampling: false, expectHeightSampling: true },
+    ]
+    for (const test of tests) {
+      nock.cleanAll()
+      setupPathGetterMocks({ noHeightSamplingImportedConn: test.noHeightSampling })
+      const data = await exporter.exportProfiles(
+        mockPath, [], { profileType: 'default' }, mockProjectId, mockSubProjectId
+      )
+
+      assert.ok(data.profiles.length)
+      const imported = data.profiles.find((p) => p.id === importedConnectionId)
+      assert.ok(imported)
+
+      // Check that the exported profile coordinates reflect the height sampling
+      // Checking points[1] not points[0] since first point is the socket and isn't on the sea bed
+      assert.equal(
+        imported.profile[1][2],
+        r(test.expectHeightSampling ? mockSeabedDepth : importedConnection.sampled[1].z)
+      )
+    }
+  })
+
+  it('should return raw intermediary points for imported connections for type raw INTE-649', async function () {
+    setupPathGetterMocks({ rawImportedConn: true })
+    const data = await exporter.exportProfiles(
+      mockPath, [], { profileType: 'raw' }, mockProjectId, mockSubProjectId
+    )
+
+    assert.ok(data.profiles.length)
+    const imported = data.profiles.find((p) => p.id === importedConnectionId)
+    assert.ok(imported)
+
+    // We can just check the number of points as long as sampled.length != imported points length
+    const importedPointsLen = importedConnection.intermediaryPoints.length + 2
+    const sampledPointsLen = importedConnection.sampled.length
+    assert.notEqual(sampledPointsLen, importedPointsLen)
+    // Check that the intermediary points were used
     assert.equal(imported.profile.length, importedPointsLen)
+
+    // Checking points[1] not points[0] since first point is the socket
+    // (first point is the fromCoordinate, second is intermediaryPoints[0])
+    assert.equal(imported.profile[1][2], mockSurveyDepth)
+    assert.equal(imported.profile[2][2], mockSurveyDepth)
+  })
+
+  it('should export survey points for imported connections with keepSurvey INTE-921', async function () {
+    setupPathGetterMocks()
+    const data = await exporter.exportProfiles(
+      mockPath, [], { profileType: 'keepSurvey', minimumSurveyPoints: 10 }, mockProjectId, mockSubProjectId
+    )
+
+    assert.ok(data.profiles.length)
+    const imported = data.profiles.find((p) => p.id === importedConnectionId)
+    assert.ok(imported)
+
+    // We can just check the number of points as long as sampled.length != imported points length
+    const importedPointsLen = importedConnection.intermediaryPoints.length + 2
+    const sampledPointsLen = importedConnection.sampled.length
+    assert.notEqual(sampledPointsLen, importedPointsLen)
+    // Check that the intermediary points were used
+    assert.equal(imported.profile.length, importedPointsLen)
+
+    // Connection should export its fromCoordinate + intermediaryPoints + toCoordinate
     assert.equal(
       imported.profile[0][2],
       r(importedConnection.fromCoordinate.z)
@@ -478,19 +584,23 @@ describe('ProfileExporter [integration]', function () {
     )
   })
 
-  it('should return intermediary points in the correct direction INTE-649', async function () {
+  it('should return survey points in the correct direction with keepSurvey INTE-921', async function () {
     setupPathGetterMocks({ reverseImportedConn: true })
     const data = await exporter.exportProfiles(
-      mockPath, [], { profileType: 'default' }, mockProjectId, mockSubProjectId
+      mockPath, [], { profileType: 'keepSurvey', minimumSurveyPoints: 10 }, mockProjectId, mockSubProjectId
     )
 
     assert.ok(data.profiles.length)
     const imported = data.profiles.find((p) => p.id === importedConnectionId)
     assert.ok(imported)
 
-    // Check we got the intermediary points not the sampled
+    // We can just check the number of points as long as sampled.length != imported points length
     const importedPointsLen = importedConnection.intermediaryPoints.length + 2
+    const sampledPointsLen = importedConnection.sampled.length
+    assert.notEqual(sampledPointsLen, importedPointsLen)
+    // Check that the intermediary points were used
     assert.equal(imported.profile.length, importedPointsLen)
+
     // Connection points should be reversed giving (conn.toCoordinate - previousProfile[last]) as
     // the first xy point and (conn.intermediaryPoints[last] - conn.toCoordinate) as the second xy point
     // and (conn.intermediaryPoints[last - 1] - conn.intermediaryPoints[last]) as the third xy point
@@ -511,81 +621,6 @@ describe('ProfileExporter [integration]', function () {
     ])
   })
 
-  it('should respect the noHeightSampling flag for imported connections for type default INTE-649', async function () {
-    const tests = [
-      { noHeightSampling: true, expectHeightSampling: false }, // default for imported connections
-      { noHeightSampling: false, expectHeightSampling: true },
-    ]
-    for (const test of tests) {
-      nock.cleanAll()
-      setupPathGetterMocks({ noHeightSamplingImportedConn: test.noHeightSampling })
-      const data = await exporter.exportProfiles(
-        mockPath, [], { profileType: 'default' }, mockProjectId, mockSubProjectId
-      )
-
-      assert.ok(data.profiles.length)
-      const imported = data.profiles.find((p) => p.id === importedConnectionId)
-      assert.ok(imported)
-
-      // Check that the exported profile coordinates reflect the height sampling
-      // Checking points[1] not points[0] since first point is the socket and isn't on the sea bed
-      // (first point is the fromCoordinate, second is intermediaryPoints[0])
-      assert.equal(
-        imported.profile[1][2],
-        r(test.expectHeightSampling ? mockSeabedDepth : importedConnection.intermediaryPoints[0].z)
-      )
-    }
-  })
-
-  it('should ignore intermediary points for imported connections for type sampled INTE-649', async function () {
-    setupPathGetterMocks()
-    const data = await exporter.exportProfiles(
-      mockPath, [], { profileType: 'sampled' }, mockProjectId, mockSubProjectId
-    )
-
-    assert.ok(data.profiles.length)
-    const imported = data.profiles.find((p) => p.id === importedConnectionId)
-    assert.ok(imported)
-
-    // We can just check the number of points as long as sampled.length != imported points length
-    const importedPointsLen = importedConnection.intermediaryPoints.length + 2
-    assert.notEqual(importedConnection.sampled.length, importedPointsLen)
-    // Check that the sampled points were used
-    assert.equal(imported.profile.length, importedConnection.sampled.length)
-  })
-
-  it('should return raw intermediary points for imported connections for type raw INTE-649', async function () {
-    setupPathGetterMocks({ rawImportedConn: true })
-    const data = await exporter.exportProfiles(
-      mockPath, [], { profileType: 'raw' }, mockProjectId, mockSubProjectId
-    )
-
-    assert.ok(data.profiles.length)
-    const imported = data.profiles.find((p) => p.id === importedConnectionId)
-    assert.ok(imported)
-
-    // Checking points[1] not points[0] since first point is the socket
-    // (first point is the fromCoordinate, second is intermediaryPoints[0])
-    assert.equal(imported.profile[1][2], mockSurveyDepth)
-    assert.equal(imported.profile[2][2], mockSurveyDepth)
-  })
-
-  it('should export intermediary points for imported connections of designType None INTE-768', async function () {
-    setupPathGetterMocks({ noDesignImportedConn: true })
-    const data = await exporter.exportProfiles(
-      mockPath, [], { profileType: 'default' }, mockProjectId, mockSubProjectId
-    )
-
-    assert.ok(data.profiles.length)
-    const imported = data.profiles.find((p) => p.id === importedConnectionId)
-    assert.ok(imported)
-
-    // We can just check the number of points as long as sampled.length != imported points length
-    const importedPointsLen = importedConnection.intermediaryPoints.length + 2
-    assert.notEqual(importedConnection.sampled.length, importedPointsLen)
-    assert.equal(imported.profile.length, importedPointsLen)
-  })
-
   it('should throw error for invalid type', async function () {
     try {
       setupPathGetterMocks()
@@ -603,9 +638,11 @@ describe('ProfileExporter [integration]', function () {
   it('should simplify points when enabled INTE-649', async function () {
     // The test here is that simplify is included in the nock headers
     // so we are testing that the API is called with that parameter
-    setupPathGetterMocks({ simplify: true })
+    setupPathGetterMocks({ rawImportedConn: true, simplify: true })
     const data = await exporter.exportProfiles(
-      mockPath, [], { simplify: true, simplifyTolerance: 1 }, mockProjectId, mockSubProjectId
+      mockPath, [],
+      { simplify: true, simplifyTolerance: 1, profileType: 'raw' },
+      mockProjectId, mockSubProjectId
     )
 
     assert.ok(data.profiles.length)

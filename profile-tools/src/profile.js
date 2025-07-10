@@ -245,7 +245,7 @@ export class ProfileExporter {
   connectionIsSurvey(conn, minPoints) {
     return (
       this.connectionIsImported(conn) &&
-      conn.noHeightSampling &&
+      !!conn.noHeightSampling &&
       (conn.intermediaryPoints || []).length >= minPoints
     )
   }
@@ -483,7 +483,7 @@ export class ProfileExporter {
         case 'connection':
         case 'table':
         case 'button':
-          throw new Error(`Extracting ${metadata.type} metadata is not supported`)
+          throw new Error(`Extracting ${metadata.type} type metadata is not supported`)
         default:
           return metadata.value
       }

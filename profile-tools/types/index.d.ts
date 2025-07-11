@@ -28,6 +28,8 @@ declare module "@xvisionas/profile-tools" {
 
   export interface ObjectAttribute {
     metaDatumId: string;
+    vendorId?: string;
+    definitionId?: string;
     name: string;
     value: string | number | boolean | undefined;
     unit: string;

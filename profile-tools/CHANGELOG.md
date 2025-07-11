@@ -1,6 +1,6 @@
 # Profile tools
 
-## 2.0.0
+## 2.0.0 - 2.0.1
 
 9 July 2025
 
@@ -23,9 +23,11 @@ both designed and imported connections.
     When survey data is detected it is exported as `raw`, else `default`.
 * Added a new option for `minimumSurveyPoints` that specifies the minimum number of
   points before a data set can be considered as exportable
+* 2.0.1 updates the type declarations
 
 Users of v1 should find that v2 is a drop-in replacement, but since the default profile
 data for imported connections is now sampled this is considered to be an incompatibility.
+
 
 ## 1.3.1
 

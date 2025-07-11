@@ -511,9 +511,9 @@ export class ProfileExporter {
         const value = this.getMetadataValue(metadataValue)
         if (value !== undefined && value !== null) {
           attributes.push({
-            metaDatumId: metadataValue.metaDatumId,
-            vendorId: metadataValue.vendorId,
-            definitionId: metadataValue.definitionId,
+            metaDatumId: metadataValue.metaDatumId,   // always defined
+            vendorId: metadataValue.vendorId,         // sometimes defined
+            definitionId: metadataValue.definitionId, // sometimes defined
             name: metadataValue.name || '',
             value: value,
             unit: metadataValue.option || '',

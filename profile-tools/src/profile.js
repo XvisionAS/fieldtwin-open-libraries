@@ -1,6 +1,6 @@
 import { APIService } from './api.js'
 import { simplify } from './simplify.js'
-import { round } from './utils.js'
+import { removeDuplicatePoints, round } from './utils.js'
 
 /**
  * @typedef {import('@xvisionas/profile-tools').Path} Path
@@ -314,17 +314,19 @@ export class ProfileExporter {
         })
       }
 
+      const roundedProfile = profile.map((point) => [
+        round(point.x, POINT_ROUND_PLACES),
+        round(point.y, POINT_ROUND_PLACES),
+        round(point.z, POINT_ROUND_PLACES),
+      ])
+
       profiles.push({
         id: node.id,
         type: node.type,
         name: label,
         attributes,
         simplified: isSimplified,
-        profile: profile.map((point) => [
-          round(point.x, POINT_ROUND_PLACES),
-          round(point.y, POINT_ROUND_PLACES),
-          round(point.z, POINT_ROUND_PLACES),
-        ]),
+        profile: removeDuplicatePoints(roundedProfile),
       })
     }
 

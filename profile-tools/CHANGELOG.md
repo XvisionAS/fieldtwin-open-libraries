@@ -1,5 +1,9 @@
 # Profile tools
 
+## 2.0.2
+
+* Remove any duplicate XYZ points after the numeric values have been rounded
+
 ## 2.0.0 - 2.0.1
 
 9 July 2025

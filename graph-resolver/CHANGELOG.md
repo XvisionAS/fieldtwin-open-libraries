@@ -1,5 +1,9 @@
 # Graph resolver
 
+## 1.1.1
+
+* Fix: guard against subProject, subProject.connections, subProject.wells being undefined
+
 ## 1.1.0
 
 14 March 2025

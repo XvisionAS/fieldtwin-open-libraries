@@ -39,7 +39,7 @@ class PathItem {
 const getAssetIdForWell = (subProject, wellId) => {
   let parentId = undefined, socketName = undefined
   if (wellId) {
-    const assetIds = Object.keys(subProject.stagedAssets)
+    const assetIds = Object.keys(subProject.stagedAssets || {})
     // This is the reverse of what generateDisplayPathsFromGraph() does to find wells for an asset
     // Try first for asset.well
     parentId = assetIds.find((id) => subProject.stagedAssets[id].well?.id === wellId)
@@ -96,11 +96,15 @@ export const generateGraph = (
   let startingWellId = undefined
   const initialRecursion = !stagedAssetId
 
+  if (!subProject || !subProject.connections) {
+    return
+  }
+
   if (!stagedAssetId) {
     trace(`generateGraph(): Start`)
     // Special case - if the starting ID is a well, find the parent asset and
     // start from there. If no parent asset is found, return an empty graph.
-    const well = subProject.wells[startingId]
+    const well = subProject.wells?.[startingId]
     if (well) {
       const parentAsset = getAssetIdForWell(subProject, startingId)
       if (!parentAsset) {
@@ -116,8 +120,8 @@ export const generateGraph = (
     stagedAssetId = startingId
   }
 
-  const stagedAsset = subProject.stagedAssets[stagedAssetId]
-  const currentConnection = currentConnectionId && subProject.connections[currentConnectionId]
+  const stagedAsset = subProject.stagedAssets?.[stagedAssetId]
+  const currentConnection = currentConnectionId && subProject.connections?.[currentConnectionId]
   trace(`At staged asset ${stagedAsset?.name} from connection ${currentConnection?.params?.label}`)
 
   if (!stagedAsset) {
@@ -202,7 +206,7 @@ export const generateGraph = (
     if (connectionId === currentConnectionId) {
       return
     }
-    const connection = subProject.connections[connectionId]
+    const connection = subProject.connections?.[connectionId]
     if (!connection) {
       trace(`Ignoring connection ${connectionId} as it does not exist`)
       return
@@ -242,7 +246,7 @@ export const generateGraph = (
           ? connection.toSocket
           : connection.fromSocket
 
-        if (subProject.stagedAssets[nextStagedAssetId]) {
+        if (subProject.stagedAssets?.[nextStagedAssetId]) {
           trace(`Following connection ${connectionId} with category ${categoryId} to staged asset ${nextStagedAssetId} socket ${nextSocketName}`)
           const child = generateGraph(
             subProject,

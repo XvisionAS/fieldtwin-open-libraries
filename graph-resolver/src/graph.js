@@ -76,7 +76,7 @@ const NO_SOCKET = '_undefined_socket'
  * @param {any} subProject a subproject object containing stagedAssets, connections, wells
  * @param {string} startingId the id of the asset or well to start walking from
  * @param {string} [endId] the id of the asset or well to end
- * @param {string|number} [connectionCategoryId] if defined, will only traverse connection with category equal to this value
+ * @param {string|number|Array<string|number>} [connectionCategoryId] if defined, will only traverse connections with category equal to this value (or any value in the array)
  * @param {Set} [visited] is a set of already visited stagedAssets used to avoid infinite recursion while traversing the graph
  * @param {string} [stagedAssetId] the id of the asset to walk from next (undefined for the first call)
  * @param {string} [currentConnectionId] is the connection that initiated this call (undefined for the first call)
@@ -93,6 +93,11 @@ export const generateGraph = (
   currentConnectionId,
   currentSocketName
 ) => {
+  if (!connectionCategoryId) {
+    connectionCategoryId = []
+  } else if (!Array.isArray(connectionCategoryId)) {
+    connectionCategoryId = [connectionCategoryId]
+  }
   let startingWellId = undefined
   const initialRecursion = !stagedAssetId
 
@@ -217,7 +222,7 @@ export const generateGraph = (
     const categoryId = connection?.definition?.category?.id
     if (
       (!currentConnectionId || categoryId == currentType) &&
-      (!connectionCategoryId || categoryId == connectionCategoryId)
+      (!connectionCategoryId.length || connectionCategoryId.some(id => categoryId == id))
     ) {
       // Get the departure socket on the current asset
       const internalToSocketName = stagedAsset.connectionsAsFrom[connectionId]

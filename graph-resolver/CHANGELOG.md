@@ -1,5 +1,11 @@
 # Graph resolver
 
+## 1.1.2
+
+08 APRIL 2026
+
+* feat: `generateGraph()` accepts a single category ID or an array of category IDs for filtering
+
 ## 1.1.1
 
 * Fix: guard against subProject, subProject.connections, subProject.wells being undefined

@@ -79,7 +79,7 @@ describe("graph-resolver", function () {
       const subProject = suite.subProject;
 
       describe(`data from API v${apiVersion}`, function () {
-        it("should generate the expected graph without a connection filter", function () {
+        it("should generate the expected graph without a filter", function () {
           const paths = findPaths(subProject, ids.manifold2);
           const pathNames = paths.map((path) => path.map((obj) => obj.name));
           assert.deepStrictEqual(
@@ -88,125 +88,363 @@ describe("graph-resolver", function () {
           );
         });
 
-        it("should generate the expected graph with a connection filter", function () {
-          const umbilicalId = "1";
-          const paths = findPaths(
-            subProject,
-            ids.manifold2,
-            undefined,
-            umbilicalId,
-          );
-          const pathNames = paths.map((path) => path.map((obj) => obj.name));
-          assert.deepStrictEqual(
-            pathNames,
-            EXPECTED_RESULTS.FOR_CONNECTION_ID_1,
-          );
+        describe(`Test category Id filter`, function () {
+          it("should generate the expected graph with a connection category filter", function () {
+            const umbilicalId = "1";
+            const paths = findPaths(
+              subProject,
+              ids.manifold2,
+              undefined,
+              umbilicalId,
+            );
+            const pathNames = paths.map((path) => path.map((obj) => obj.name));
+            assert.deepStrictEqual(
+              pathNames,
+              EXPECTED_RESULTS.FOR_CONNECTION_ID_1,
+            );
+          });
+
+          it("should generate the same graph with a connection category filter pass as string or id", function () {
+            const umbilicalId = 1;
+            const pathsWithString = findPaths(
+              subProject,
+              ids.manifold2,
+              undefined,
+              `${umbilicalId}`,
+            );
+            const pathNamesWithString = pathsWithString.map((path) =>
+              path.map((obj) => obj.name),
+            );
+            const pathsWithNumber = findPaths(
+              subProject,
+              ids.manifold2,
+              undefined,
+              umbilicalId,
+            );
+            const pathNamesWithNumber = pathsWithNumber.map((path) =>
+              path.map((obj) => obj.name),
+            );
+
+            assert.deepStrictEqual(pathNamesWithNumber, pathNamesWithString);
+            assert.deepStrictEqual(
+              pathNamesWithNumber,
+              EXPECTED_RESULTS.FOR_CONNECTION_ID_1,
+            );
+          });
+
+          it("should generate the same expected graph with a one element array as connection category filter or a string", function () {
+            const umbilicalId = ["1"];
+            const paths = findPaths(
+              subProject,
+              ids.manifold2,
+              undefined,
+              umbilicalId,
+            );
+            const pathNames = paths.map((path) => path.map((obj) => obj.name));
+            assert.deepStrictEqual(
+              pathNames,
+              EXPECTED_RESULTS.FOR_CONNECTION_ID_1,
+            );
+          });
+
+          it("should generate the same graph with an empty array as connection category filter as with no filter", function () {
+            const paths = findPaths(subProject, ids.manifold2, undefined, []);
+            const pathNames = paths.map((path) => path.map((obj) => obj.name));
+            assert.deepStrictEqual(
+              pathNames,
+              EXPECTED_RESULTS.FOR_NO_CONNECTION_FILTER,
+            );
+          });
+
+          it("should generate the expected graph with a connection category filter as an array of two ids, one real and one fake", function () {
+            const paths = findPaths(subProject, ids.manifold2, undefined, [
+              "1",
+              "99999",
+            ]);
+            const pathNames = paths.map((path) => path.map((obj) => obj.name));
+            assert.deepStrictEqual(
+              pathNames,
+              EXPECTED_RESULTS.FOR_CONNECTION_ID_1,
+            );
+          });
+
+          it("should generate the expected graph with a connection category filter as an array [1, 2]", function () {
+            // category 1 = Umbilical; category 2 = Oil Production in v1.9 (but 264 in v1.10)
+            const paths = findPaths(
+              subProject,
+              ids.manifold2,
+              undefined,
+              [1, 2],
+            );
+            const pathNames = paths.map((path) => path.map((obj) => obj.name));
+            const expected =
+              apiVersion === "1.9"
+                ? EXPECTED_RESULTS.FOR_NO_CONNECTION_FILTER
+                : EXPECTED_RESULTS.FOR_CONNECTION_ID_1;
+            assert.deepStrictEqual(pathNames, expected);
+          });
+
+          it("should generate the expected graph with a connection category filter as an array [1, 264]", function () {
+            // category 264 = Oil Production in v1.10 (but 2 in v1.9)
+            const paths = findPaths(
+              subProject,
+              ids.manifold2,
+              undefined,
+              [1, 264],
+            );
+            const pathNames = paths.map((path) => path.map((obj) => obj.name));
+            const expected =
+              apiVersion === "1.10"
+                ? EXPECTED_RESULTS.FOR_NO_CONNECTION_FILTER
+                : EXPECTED_RESULTS.FOR_CONNECTION_ID_1;
+            assert.deepStrictEqual(pathNames, expected);
+          });
+
+          it("should generate the expected graph with a connection category filter as an array [2, 264]", function () {
+            // category 2 = Oil Production in v1.9; category 264 = Oil Production in v1.10
+            // Umbilical (category 1) is excluded in both versions
+            const paths = findPaths(
+              subProject,
+              ids.manifold2,
+              undefined,
+              [2, 264],
+            );
+            const pathNames = paths.map((path) => path.map((obj) => obj.name));
+            assert.deepStrictEqual(
+              pathNames,
+              EXPECTED_RESULTS.FOR_OIL_PRODUCTION_ONLY,
+            );
+          });
         });
+        describe(`Test connection Type  Id filter`, function () {
+          it("should generate the expected graph with a connection type filter", function () {
+            const umbilicalId = "1";
+            const paths = findPaths(
+              subProject,
+              ids.manifold2,
+              undefined,
+              undefined,
+              umbilicalId,
+            );
+            const pathNames = paths.map((path) => path.map((obj) => obj.name));
+            assert.deepStrictEqual(
+              pathNames,
+              EXPECTED_RESULTS.FOR_CONNECTION_ID_1,
+            );
+          });
 
-        it("should generate the same graph with a connection filter pass as string or id", function () {
-          const umbilicalId = 1;
-          const pathsWithString = findPaths(
-            subProject,
-            ids.manifold2,
-            undefined,
-            `${umbilicalId}`,
-          );
-          const pathNamesWithString = pathsWithString.map((path) =>
-            path.map((obj) => obj.name),
-          );
-          const pathsWithNumber = findPaths(
-            subProject,
-            ids.manifold2,
-            undefined,
-            umbilicalId,
-          );
-          const pathNamesWithNumber = pathsWithNumber.map((path) =>
-            path.map((obj) => obj.name),
-          );
+          it("should generate the same graph with a connection type filter pass as string or id", function () {
+            const umbilicalId = 1;
+            const pathsWithString = findPaths(
+              subProject,
+              ids.manifold2,
+              undefined,
+              undefined,
+              `${umbilicalId}`,
+            );
+            const pathNamesWithString = pathsWithString.map((path) =>
+              path.map((obj) => obj.name),
+            );
+            const pathsWithNumber = findPaths(
+              subProject,
+              ids.manifold2,
+              undefined,
+              undefined,
+              umbilicalId,
+            );
+            const pathNamesWithNumber = pathsWithNumber.map((path) =>
+              path.map((obj) => obj.name),
+            );
 
-          assert.deepStrictEqual(pathNamesWithNumber, pathNamesWithString);
-          assert.deepStrictEqual(pathNamesWithNumber, EXPECTED_RESULTS.FOR_CONNECTION_ID_1);
+            assert.deepStrictEqual(pathNamesWithNumber, pathNamesWithString);
+            assert.deepStrictEqual(
+              pathNamesWithNumber,
+              EXPECTED_RESULTS.FOR_CONNECTION_ID_1,
+            );
+          });
+
+          it("should generate the same expected graph with a one element array as connection type filter or a string", function () {
+            const umbilicalId = ["1"];
+            const paths = findPaths(
+              subProject,
+              ids.manifold2,
+              undefined,
+              undefined,
+              umbilicalId,
+            );
+            const pathNames = paths.map((path) => path.map((obj) => obj.name));
+            assert.deepStrictEqual(
+              pathNames,
+              EXPECTED_RESULTS.FOR_CONNECTION_ID_1,
+            );
+          });
+
+          it("should generate the same graph with an empty array as connection type filter as with no filter", function () {
+            const paths = findPaths(
+              subProject,
+              ids.manifold2,
+              undefined,
+              undefined,
+              [],
+            );
+            const pathNames = paths.map((path) => path.map((obj) => obj.name));
+            assert.deepStrictEqual(
+              pathNames,
+              EXPECTED_RESULTS.FOR_NO_CONNECTION_FILTER,
+            );
+          });
+
+          it("should generate the expected graph with a connection type filter as an array of two ids, one real and one fake", function () {
+            const paths = findPaths(
+              subProject,
+              ids.manifold2,
+              undefined,
+              undefined,
+              ["1", "99999"],
+            );
+            const pathNames = paths.map((path) => path.map((obj) => obj.name));
+            assert.deepStrictEqual(
+              pathNames,
+              EXPECTED_RESULTS.FOR_CONNECTION_ID_1,
+            );
+          });
+
+          it("should generate the expected graph with a connection type filter as an array [1, 2]", function () {
+            // category 1 = Umbilical; category 2 = Oil Production in v1.9 (but 264 in v1.10)
+            const paths = findPaths(
+              subProject,
+              ids.manifold2,
+              undefined,
+              undefined,
+              [1, 2],
+            );
+            const pathNames = paths.map((path) => path.map((obj) => obj.name));
+            const expected = EXPECTED_RESULTS.FOR_NO_CONNECTION_FILTER;
+            assert.deepStrictEqual(pathNames, expected);
+          });
+
+          it("should generate the expected graph with a connection type filter as an array [1, 264]", function () {
+            // category 264 = Oil Production in v1.10 (but 2 in v1.9)
+            const paths = findPaths(
+              subProject,
+              ids.manifold2,
+              undefined,
+              undefined,
+              [1, 264],
+            );
+            const pathNames = paths.map((path) => path.map((obj) => obj.name));
+            const expected = EXPECTED_RESULTS.FOR_CONNECTION_ID_1;
+            assert.deepStrictEqual(pathNames, expected);
+          });
+
+          it("should generate the expected graph with a connection type filter as an array [2, 264]", function () {
+            // category 2 = Oil Production in v1.9; category 264 = Oil Production in v1.10
+            // Umbilical (category 1) is excluded in both versions
+            const paths = findPaths(
+              subProject,
+              ids.manifold2,
+              undefined,
+              undefined,
+              [2, 264],
+            );
+            const pathNames = paths.map((path) => path.map((obj) => obj.name));
+            assert.deepStrictEqual(
+              pathNames,
+              EXPECTED_RESULTS.FOR_OIL_PRODUCTION_ONLY,
+            );
+          });
         });
-
-        it("should generate the same expected graph with a one element array as connection filter or a string", function () {
-          const umbilicalId = ["1"];
-          const paths = findPaths(
-            subProject,
-            ids.manifold2,
-            undefined,
-            umbilicalId,
-          );
-          const pathNames = paths.map((path) => path.map((obj) => obj.name));
-          assert.deepStrictEqual(
-            pathNames,
-            EXPECTED_RESULTS.FOR_CONNECTION_ID_1,
-          );
+        describe(`Test category with both category and connection type Id filter`, function () {
+          it("should generate the expected graph with a connection category 1 and connection type 1 filter", function () {
+            const umbilicalId = "1";
+            const paths = findPaths(
+              subProject,
+              ids.manifold2,
+              undefined,
+              umbilicalId,
+              umbilicalId,
+            );
+            const pathNames = paths.map((path) => path.map((obj) => obj.name));
+            assert.deepStrictEqual(
+              pathNames,
+              EXPECTED_RESULTS.FOR_CONNECTION_ID_1,
+            );
+          });
+          it("should generate the expected graph with a nonexistent connection type filter", function () {
+            const umbilicalId = ["1"];
+            const fakeId = "Fake";
+            const paths = findPaths(
+              subProject,
+              ids.manifold2,
+              undefined,
+              umbilicalId,
+              fakeId,
+            );
+            const pathNames = paths.map((path) => path.map((obj) => obj.name));
+            assert.deepStrictEqual(pathNames, []);
+          });
+          it("should generate the expected graph with a nonexistent connection category filter", function () {
+            const umbilicalId = "1";
+            const fakeId = "Fake";
+            const paths = findPaths(
+              subProject,
+              ids.manifold2,
+              undefined,
+              fakeId,
+              umbilicalId,
+            );
+            const pathNames = paths.map((path) => path.map((obj) => obj.name));
+            assert.deepStrictEqual(pathNames, []);
+          });
+          it("should generate the expected graph with a non overlaping Filters category filter", function () {
+            const umbilicalId = "1";
+            const oilProductionId = "2";
+            const fakeIds = ["Fake", 2];
+            const paths = findPaths(
+              subProject,
+              ids.manifold2,
+              undefined,
+              umbilicalId,
+              fakeIds,
+            );
+            const pathNames = paths.map((path) => path.map((obj) => obj.name));
+            assert.deepStrictEqual(pathNames, []);
+          });
+          it("should generate the expected graph with a overlaping Filters (2)", function () {
+            const umbilicalId = "1";
+            const oilAndUmbilical = ["2", 1];
+            const fakeId = "Fake";
+            const paths = findPaths(
+              subProject,
+              ids.manifold2,
+              undefined,
+              umbilicalId,
+              oilAndUmbilical,
+            );
+            const pathNames = paths.map((path) => path.map((obj) => obj.name));
+            assert.deepStrictEqual(
+              pathNames,
+              EXPECTED_RESULTS.FOR_CONNECTION_ID_1,
+            );
+          });
+          it("should generate the expected graph with a overlaping Filters (2)", function () {
+            const umbilicalId = "1";
+            const oilAndUmbilical = ["2", 1];
+            const fakeId = "Fake";
+            const paths = findPaths(
+              subProject,
+              ids.manifold2,
+              undefined,
+              oilAndUmbilical,
+              umbilicalId,
+            );
+            const pathNames = paths.map((path) => path.map((obj) => obj.name));
+            assert.deepStrictEqual(
+              pathNames,
+              EXPECTED_RESULTS.FOR_CONNECTION_ID_1,
+            );
+          });
         });
-
-        it("should generate the same graph with an empty array as connection filter as with no filter", function () {
-          const paths = findPaths(subProject, ids.manifold2, undefined, []);
-          const pathNames = paths.map((path) => path.map((obj) => obj.name));
-          assert.deepStrictEqual(
-            pathNames,
-            EXPECTED_RESULTS.FOR_NO_CONNECTION_FILTER,
-          );
-        });
-
-        it("should generate the expected graph with a connection filter as an array of two ids, one real and one fake", function () {
-          const paths = findPaths(subProject, ids.manifold2, undefined, [
-            "1",
-            "99999",
-          ]);
-          const pathNames = paths.map((path) => path.map((obj) => obj.name));
-          assert.deepStrictEqual(
-            pathNames,
-            EXPECTED_RESULTS.FOR_CONNECTION_ID_1,
-          );
-        });
-
-        it("should generate the expected graph with a connection filter as an array [1, 2]", function () {
-          // category 1 = Umbilical; category 2 = Oil Production in v1.9 (but 264 in v1.10)
-          const paths = findPaths(subProject, ids.manifold2, undefined, [1, 2]);
-          const pathNames = paths.map((path) => path.map((obj) => obj.name));
-          const expected =
-            apiVersion === "1.9"
-              ? EXPECTED_RESULTS.FOR_NO_CONNECTION_FILTER
-              : EXPECTED_RESULTS.FOR_CONNECTION_ID_1;
-          assert.deepStrictEqual(pathNames, expected);
-        });
-
-        it("should generate the expected graph with a connection filter as an array [1, 264]", function () {
-          // category 264 = Oil Production in v1.10 (but 2 in v1.9)
-          const paths = findPaths(
-            subProject,
-            ids.manifold2,
-            undefined,
-            [1, 264],
-          );
-          const pathNames = paths.map((path) => path.map((obj) => obj.name));
-          const expected =
-            apiVersion === "1.10"
-              ? EXPECTED_RESULTS.FOR_NO_CONNECTION_FILTER
-              : EXPECTED_RESULTS.FOR_CONNECTION_ID_1;
-          assert.deepStrictEqual(pathNames, expected);
-        });
-
-        it("should generate the expected graph with a connection filter as an array [2, 264]", function () {
-          // category 2 = Oil Production in v1.9; category 264 = Oil Production in v1.10
-          // Umbilical (category 1) is excluded in both versions
-          const paths = findPaths(
-            subProject,
-            ids.manifold2,
-            undefined,
-            [2, 264],
-          );
-          const pathNames = paths.map((path) => path.map((obj) => obj.name));
-          assert.deepStrictEqual(
-            pathNames,
-            EXPECTED_RESULTS.FOR_OIL_PRODUCTION_ONLY,
-          );
-        });
-
         it("should generate the expected graph for the example in the README", function () {
           const paths = findPaths(subProject, ids.manifold3, ids.template);
           const pathNames = paths.map((path) => path.map((obj) => obj.name));
@@ -338,7 +576,7 @@ describe("graph-resolver", function () {
           assert.deepStrictEqual(paths2, paths1);
         });
 
-        it("should generate the expected graph without a connection filter with endpoint", function () {
+        it("should generate the expected graph without a filter with endpoint", function () {
           const paths = findPaths(subProject, ids.manifold2, ids.template);
           const pathNames = paths.map((path) => path.map((obj) => obj.name));
           assert.deepStrictEqual(pathNames, [

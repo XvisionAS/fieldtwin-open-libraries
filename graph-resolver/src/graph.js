@@ -73,6 +73,8 @@ const NO_SOCKET = '_undefined_socket'
  *   We also make sure if a connection arrive at a labelled socket, the next recursion starts
  *   at a socket with the same label. Kind of mimicking internal wiring.
  * - If `currentConnectionId` is not defined, we just go through all the connections.
+ * - If both `connectionCategoryId` and `connectionTypeIds` are defined it will only
+ *   traverse connections that satisfy BOTH conditions.
  * @param {any} subProject a subproject object containing stagedAssets, connections, wells
  * @param {string} startingId the id of the asset or well to start walking from
  * @param {string} [endId] the id of the asset or well to end
@@ -81,6 +83,7 @@ const NO_SOCKET = '_undefined_socket'
  * @param {string} [stagedAssetId] the id of the asset to walk from next (undefined for the first call)
  * @param {string} [currentConnectionId] is the connection that initiated this call (undefined for the first call)
  * @param {string} [currentSocketName] is the socket the connection arrived at on `stagedAssetId` (undefined for the first call)
+ * @param {string|number|Array<string|number>} [connectionTypeIds] if defined, will only traverse connections with connectionType equal to this value (or any value in the array)
  * @returns {Object|undefined} a node of the graph structure (the root node for the top level call)
  */
 export const generateGraph = (
@@ -91,12 +94,18 @@ export const generateGraph = (
   visited,
   stagedAssetId,
   currentConnectionId,
-  currentSocketName
+  currentSocketName,
+  connectionTypeIds,
 ) => {
   if (!connectionCategoryId) {
     connectionCategoryId = []
   } else if (!Array.isArray(connectionCategoryId)) {
-    connectionCategoryId = [connectionCategoryId]
+    connectionCategoryId = [connectionCategoryId];
+  }
+  if (!connectionTypeIds) {
+    connectionTypeIds = []
+  } else if (!Array.isArray(connectionTypeIds)) {
+    connectionTypeIds = [connectionTypeIds]
   }
   let startingWellId = undefined
   const initialRecursion = !stagedAssetId
@@ -204,8 +213,10 @@ export const generateGraph = (
     ...connectionsAsTo,
   }
 
-  const currentType = currentConnection?.definition?.category?.id
-  trace(`Current connection category is ${currentType}`)
+  const currentCategory = currentConnection?.definition?.category?.id
+  const currentConnectionType = currentConnection?.definition?.id
+  trace(`Current connection category is ${currentCategory}`)
+  trace(`Current connection type is ${currentConnectionType}`)
 
   Object.keys(assetConnectionIds).forEach((connectionId) => {
     if (connectionId === currentConnectionId) {
@@ -220,9 +231,11 @@ export const generateGraph = (
 
     // #21 Check type with loose equality == to handle type ID: 1 connectionTypeCategory: '1'
     const categoryId = connection?.definition?.category?.id
+    const connectionTypeId = connection.definition?.id
     if (
-      (!currentConnectionId || categoryId == currentType) &&
-      (!connectionCategoryId.length || connectionCategoryId.some(id => categoryId == id))
+      (!currentConnectionId || categoryId == currentCategory) &&
+      (connectionCategoryId.length ? (connectionCategoryId.some((id) => categoryId == id)) : true) &&
+      (connectionTypeIds.length ? connectionTypeIds.some((id) => connectionTypeId == id): true)
     ) {
       // Get the departure socket on the current asset
       const internalToSocketName = stagedAsset.connectionsAsFrom[connectionId]
